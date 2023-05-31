@@ -3,6 +3,10 @@ import { Handle, useReactFlow, useStoreApi, Position } from 'reactflow';
 
 const options = [
   {
+    value: 'Add',
+    label: 'Add',
+  },
+  {
     value: 'smoothstep',
     label: 'Smoothstep',
   },
@@ -20,11 +24,11 @@ const options = [
   },
 ];
 
-function Select({ value, handleId, nodeId }) {
+function Select({ value, handleId, nodeId }: any) {
   const { setNodes } = useReactFlow();
   const store = useStoreApi();
 
-  const onChange = (evt) => {
+  const onChange = (evt: { target: { value: any; }; }) => {
     const { nodeInternals } = store.getState();
     setNodes(
       Array.from(nodeInternals.values()).map((node) => {
@@ -53,7 +57,8 @@ function Select({ value, handleId, nodeId }) {
           </option>
         ))}
       </select>
-      <Handle type="source" position={Position.Right} id={handleId} />
+      <Handle type="target" position={Position.Top} id={handleId} />
+      <Handle type="source" position={Position.Bottom} id={handleId} />
     </div>
   );
 }
@@ -65,10 +70,9 @@ function CustomNode({ id, data }: any) {
         This is a <strong>custom node</strong>
       </div>
       <div className="custom-node__body">
-        {console.log({ id, data })}
-        {/* {Object.keys(data.selects).map((handleId) => (
+        {Object.keys(data.selects).map((handleId) => (
           <Select key={handleId} nodeId={id} value={data.selects[handleId]} handleId={handleId} />
-        ))} */}
+        ))}
       </div>
     </>
   );

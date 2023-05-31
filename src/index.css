@@ -141,3 +141,8 @@ button:focus-visible {
 /* .react-flow {
   overflow: unset !important;
 } */
+
+.customInputBox {
+  width: 80%;
+  margin: 1%;
+}

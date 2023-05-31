@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback } from 'react';
+import React, { useState, useRef, useCallback, useMemo } from 'react';
 import ReactFlow, {
     ReactFlowProvider,
     addEdge,
@@ -10,6 +10,7 @@ import ReactFlow, {
     Connection,
     Edge,
     ReactFlowInstance,
+    applyNodeChanges,
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 
@@ -17,48 +18,34 @@ import Sidebar from './Sidebar';
 import CustomNode from './CustomNode';
 import TextUpdaterNode from './TextUpdaterNode';
 
-
-interface BackgroundProps {
-    color: string;
-    variant: 'dots' | 'squares' | 'lines'; // specify the allowed values
-}
-
-const initialNodes = [
-    {
-        id: '1',
-        type: 'input',
-        data: { label: 'input node' },
-        position: { x: 250, y: 5 },
-    },
-];
-
 let VarId = 0;
 let funId = 0;
-// const getId = (type: string) => `${type}_${id++}`;
+
 const getId = (type: string) => `${type === 'input' ? 'variable_' + VarId++ : 'function_' + funId++}`;
-// const getId = (type: string) => `${type}_${id++}`;
 
-// `${type === 'input' ? 'variable' : 'function'} node` 
 
-const BackgroundPattern: React.FC<BackgroundProps> = ({ color, variant }) => {
-    return <div style={{ backgroundColor: color }} className={variant} />;
-};
 
 export const DnDFlower = () => {
+    const [value, setValue] = useState('');
+
+
+    const nodeTypes = useMemo(() => ({
+        custom: CustomNode,
+        textUpdater: (props: any) => <TextUpdaterNode {...props} onChange={handleTextChange} />
+    }), []);
+
+
     const reactFlowWrapper = useRef(null);
-    const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
+    const [nodes, setNodes, onNodesChange] = useNodesState([]);
     const [edges, setEdges, onEdgesChange] = useEdgesState([]);
     const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance | null>(null);
 
-
     const onConnect = useCallback((params: Edge | Connection) => setEdges((eds) => addEdge(params, eds)), []);
-
 
     const onSave = useCallback(() => {
         const flowKey = 'example-flow';
         if (reactFlowInstance) {
             const flow = reactFlowInstance.toObject();
-            console.log('flow', flow);
             localStorage.setItem(flowKey, JSON.stringify(flow));
         }
     }, [reactFlowInstance]);
@@ -67,7 +54,35 @@ export const DnDFlower = () => {
         event.preventDefault();
         event.dataTransfer.dropEffect = 'move';
     }, []);
+    const handleTextChange = (e: any) => {
+        console.log('e', e);
+        setValue(e);
+    };
+    const edgesWithUpdatedTypes = edges.map((edge) => {
+        console.log('edge.sourceHandle', edge.sourceHandle, edge.data);
+        if (edge.sourceHandle) {
+            const check = nodes.find((node) => node.type === 'custom').data;
+            console.log('check', check);
+            const edgeType = nodes.find((node) => node.type === 'custom').data.selects[edge.sourceHandle];
+            edge.type = edgeType;
+        }
 
+        return edge;
+    });
+
+    const dataWithUpdates = nodes.map((node) => {
+        console.log('node', node);
+        if (node.type === "textUpdater") {
+            node.data = {
+                ...node.data,
+                value
+            };
+        }
+        if (node.type === "custom") {
+
+        }
+        return node;
+    });
     const onDrop = useCallback(
         (event: { preventDefault: () => void; dataTransfer: { getData: (arg0: string) => any; }; clientX: number; clientY: number; }) => {
             event.preventDefault();
@@ -75,7 +90,6 @@ export const DnDFlower = () => {
             const reactFlowBounds = reactFlowWrapper.current.getBoundingClientRect();
             const type = event.dataTransfer.getData('application/reactflow');
 
-            // check if the dropped element is valid
             if (typeof type === 'undefined' || !type) {
                 return;
             }
@@ -85,33 +99,38 @@ export const DnDFlower = () => {
                 y: event.clientY - reactFlowBounds.top,
             });
             const nodeTypeId = getId(type);
-            const newNode = {
+            setValue('');
+            let newNode: any = {
                 id: nodeTypeId,
                 type,
                 position,
-                // data: { label: `${type === 'input' ? 'variable' : 'function'} node` },
-                data: { label: nodeTypeId },
+                data: { label: nodeTypeId, value: '' },
                 style: { background: '#fff', border: `1px solid ${type === 'input' ? '#0041d0' : 'green'}`, borderRadius: `${type === 'input' ? 0 : '10px'}`, fontSize: 12 },
             };
+            if (type === 'custom') {
+                newNode.data = {
+                    label: nodeTypeId, selects: {
+                        'handle-0': 'smoothstep',
+                    },
+                };
+            }
 
             setNodes((nds) => nds.concat(newNode));
         },
         [reactFlowInstance]
     );
 
-    console.log('nodes', nodes);
-    // const nodeTypes = {
-    //     custom: CustomNode,
-    //     textUpdater: TextUpdaterNode
-    // };
     return (
         <div className="dndflow">
             <ReactFlowProvider>
                 <Sidebar />
                 <div className="reactflow-wrapper" ref={reactFlowWrapper}>
                     <ReactFlow
-                        nodes={nodes}
-                        edges={edges}
+                        // nodes={nodes}
+                        nodes={dataWithUpdates}
+
+                        // edges={edges}
+                        edges={edgesWithUpdatedTypes}
                         onNodesChange={onNodesChange}
                         onEdgesChange={onEdgesChange}
                         onConnect={onConnect}
@@ -119,7 +138,7 @@ export const DnDFlower = () => {
                         onDrop={onDrop}
                         onDragOver={onDragOver}
                         fitView
-                    // nodeTypes={nodeTypes}
+                        nodeTypes={nodeTypes}
                     >
                         <Background color="#ccc" variant='dots' />
                         <Controls />
@@ -132,3 +151,4 @@ export const DnDFlower = () => {
         </div>
     );
 };
+
