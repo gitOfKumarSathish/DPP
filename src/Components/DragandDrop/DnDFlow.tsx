@@ -12,6 +12,7 @@ import ReactFlow, {
     ReactFlowInstance,
     applyNodeChanges,
     MarkerType,
+    BackgroundVariant,
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 
@@ -137,7 +138,7 @@ export const DnDFlower = () => {
                         fitView
                         nodeTypes={nodeTypes}
                     >
-                        <Background color="#ccc" variant='dots' />
+                        <Background color="#ccc" variant={BackgroundVariant.Dots} />
                         <Controls />
                         <Panel position="top-right">
                             <button onClick={onSave}>save</button>
