@@ -21,7 +21,7 @@ import TextUpdaterNode from './TextUpdaterNode';
 let VarId = 0;
 let funId = 0;
 
-const getId = (type: string) => `${((type === 'input' || type === 'textUpdater') || type === 'textUpdater') ? 'variable_' + VarId++ : 'function_' + funId++}`;
+const getId = (type: string) => `${(type === 'input' || type === 'textUpdater') ? 'variable_' + VarId++ : 'function_' + funId++}`;
 const nodeTypes = {
     custom: CustomNode,
     textUpdater: TextUpdaterNode
@@ -57,47 +57,26 @@ export const DnDFlower = () => {
         event.dataTransfer.dropEffect = 'move';
     }, []);
 
-    const edgesWithUpdatedTypes = edges.map((edge) => {
-        console.log('edge.sourceHandle', edge.sourceHandle, edge.data);
+    const edgesWithUpdatedTypes = edges.map((edge: any) => {
         if (edge.sourceHandle) {
-            const edgeType = nodes.find((node) => node.type === 'custom').data.selects[edge.sourceHandle];
+            const edgeType = nodes.find((node) => node.type === 'custom')?.data.selects[edge.sourceHandle];
             edge.type = edgeType;
         }
-
+        console.log('edge', edge);
         return edge;
     });
 
-    const dataWithUpdates = nodes.map((node) => {
-        console.log('Main node', node);
-        // if (node.type === "textUpdater") {
-        //     node.data = {
-        //         ...node.data,
-        //         value
-        //     };
-        // }
-        if (node.type === "custom") {
-            // const check = node.data;
-            // console.log('object');
-            // console.log('check', Object.values(check.selects));
-            // node.data = {
-            //     ...node.data,
-            //     fnType: Object.values(check.selects)
-            // };
-        }
-        return node;
-    });
     const onDrop = useCallback(
         (event: { preventDefault: () => void; dataTransfer: { getData: (arg0: string) => any; }; clientX: number; clientY: number; }) => {
             event.preventDefault();
 
-            const reactFlowBounds = reactFlowWrapper.current.getBoundingClientRect();
+            const reactFlowBounds = reactFlowWrapper?.current?.getBoundingClientRect();
             const type = event.dataTransfer.getData('application/reactflow');
-
             if (typeof type === 'undefined' || !type) {
                 return;
             }
 
-            const position = reactFlowInstance.project({
+            const position = reactFlowInstance?.project({
                 x: event.clientX - reactFlowBounds.left,
                 y: event.clientY - reactFlowBounds.top,
             });
@@ -122,6 +101,19 @@ export const DnDFlower = () => {
         [reactFlowInstance]
     );
 
+
+    const dataWithUpdates = nodes.map((node) => {
+        // console.log('Main node', node);
+        return node;
+    });
+
+    const isValidConnection = (connection: any) => {
+        const { source, target } = connection;
+        const sourceValid = nodes.find((node) => node.id === source)?.type;
+        const targetValid = nodes.find((node) => node.id === target)?.type;
+        return sourceValid !== 'custom' || targetValid !== 'custom';
+    };
+
     return (
         <div className="dndflow">
             <ReactFlowProvider>
@@ -135,6 +127,7 @@ export const DnDFlower = () => {
                         edges={edgesWithUpdatedTypes}
                         onNodesChange={onNodesChange}
                         onEdgesChange={onEdgesChange}
+                        isValidConnection={isValidConnection}
                         onConnect={onConnect}
                         onInit={setReactFlowInstance}
                         onDrop={onDrop}

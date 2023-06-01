@@ -25,7 +25,7 @@ function TextUpdaterNode(props: any) {
 
     return (
         <div className="text-updater-node">
-            {/* <Handle type="target" position={Position.Top} isConnectable={isConnectable} /> */}
+            <Handle type="target" position={Position.Top} isConnectable={isConnectable} />
             <div>
                 {/* <label htmlFor="text">Text:</label> */}
                 <input id="text" name="text" onChange={onChange} className="nodrag customInputBox" />
