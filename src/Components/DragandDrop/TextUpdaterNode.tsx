@@ -23,12 +23,30 @@ function TextUpdaterNode(props: any) {
         );
     }, [props]);
 
+    const labelNameChange = useCallback((evt: { target: { value: any; }; }) => {
+        const { nodeInternals } = store.getState();
+        setNodes(
+            Array.from(nodeInternals.values()).map((node) => {
+                if (node.id === id) {
+                    console.log('node.id changed', node);
+                    node.data = {
+                        ...node.data,
+                        label: evt.target.value
+                    };
+                }
+                return node;
+            })
+        );
+    }, [props]);
+
     return (
         <div className="text-updater-node">
             <Handle type="target" position={Position.Top} isConnectable={isConnectable} />
             <div>
                 {/* <label htmlFor="text">Text:</label> */}
-                <input id="text" name="text" onChange={onChange} className="nodrag customInputBox" />
+                <input id="text" name="text" onChange={labelNameChange} className="titleBox" placeholder='variable name' />
+                <hr />
+                <input id="text" name="text" onChange={onChange} className="nodrag customInputBox" placeholder='variable value' />
             </div>
             <Handle
                 type="source"

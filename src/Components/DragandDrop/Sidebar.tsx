@@ -9,17 +9,17 @@ export default () => {
   return (
     <aside>
       <div className="description">You can drag these nodes to the pane on the right.</div>
-      <div className="dndnode input" onDragStart={(event) => onDragStart(event, 'input')} draggable>
+      {/* <div className="dndnode input" onDragStart={(event) => onDragStart(event, 'input')} draggable>
         Variable Node
       </div>
       <div className="dndnode function" onDragStart={(event) => onDragStart(event, 'default')} draggable>
         function Node
-      </div>
+      </div> */}
       <div className="dndnode input" onDragStart={(event) => onDragStart(event, 'textUpdater')} draggable>
-        textUpdater Node
+        Variable Node
       </div>
       <div className="dndnode function" onDragStart={(event) => onDragStart(event, 'custom')} draggable>
-        custom Node
+        Function Node
       </div>
 
 

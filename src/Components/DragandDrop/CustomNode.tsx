@@ -7,21 +7,17 @@ const options = [
     label: 'Add',
   },
   {
-    value: 'smoothstep',
-    label: 'Smoothstep',
+    value: 'Multiple',
+    label: 'Multiple',
   },
   {
-    value: 'step',
-    label: 'Step',
+    value: 'Subtract',
+    label: 'Subtract',
   },
   {
-    value: 'default',
-    label: 'Bezier (default)',
-  },
-  {
-    value: 'straight',
-    label: 'Straight',
-  },
+    value: 'Divide',
+    label: 'Divide',
+  }
 ];
 
 function Select({ value, handleId, nodeId }: any) {
@@ -67,11 +63,14 @@ function CustomNode({ id, data }: any) {
   return (
     <section className='dropdownArea'>
       <div className="custom-node__header">
-        Select a function
+        Function Type
       </div>
       <div className="custom-node__body">
-        {Object.keys(data.selects).map((handleId) => (
-          <Select key={handleId} nodeId={id} value={data.selects[handleId]} handleId={handleId} />
+        {Object.keys(data.selects).map((handleId, i) => (
+          <>
+            {console.log('handleId', handleId)}
+            <Select key={i} nodeId={id} value={data.selects[handleId]} handleId={handleId} />
+          </>
         ))}
       </div>
     </section>

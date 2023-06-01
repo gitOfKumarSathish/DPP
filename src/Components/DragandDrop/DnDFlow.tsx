@@ -11,6 +11,7 @@ import ReactFlow, {
     Edge,
     ReactFlowInstance,
     applyNodeChanges,
+    MarkerType,
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 
@@ -59,23 +60,24 @@ export const DnDFlower = () => {
 
     const edgesWithUpdatedTypes = edges.map((edge: any) => {
         if (edge.sourceHandle) {
-            const edgeType = nodes.find((node) => node.type === 'custom')?.data.selects[edge.sourceHandle];
-            edge.type = edgeType;
+            // const edgeType = nodes.find((node) => node.type === 'custom')?.data.selects[edge.sourceHandle];
+            // edge.type = edgeType;
+            edge.markerEnd = {
+                type: MarkerType.ArrowClosed,
+            };
         }
-        console.log('edge', edge);
+        // console.log('edge', edge);
         return edge;
     });
 
     const onDrop = useCallback(
         (event: { preventDefault: () => void; dataTransfer: { getData: (arg0: string) => any; }; clientX: number; clientY: number; }) => {
             event.preventDefault();
-
             const reactFlowBounds = reactFlowWrapper?.current?.getBoundingClientRect();
             const type = event.dataTransfer.getData('application/reactflow');
             if (typeof type === 'undefined' || !type) {
                 return;
             }
-
             const position = reactFlowInstance?.project({
                 x: event.clientX - reactFlowBounds.left,
                 y: event.clientY - reactFlowBounds.top,
@@ -86,16 +88,16 @@ export const DnDFlower = () => {
                 type,
                 position,
                 data: { label: nodeTypeId, value: '' },
-                style: { background: '#fff', border: `1px solid ${(type === 'input' || type === 'textUpdater') ? '#0041d0' : 'green'}`, borderRadius: `${(type === 'input' || type === 'textUpdater') ? 0 : '10px'}`, fontSize: 12 },
+                style: { background: '#fff', border: `1px solid ${(type === 'input' || type === 'textUpdater') ? '#0041d0' : 'green'}`, borderRadius: `${(type === 'input' || type === 'textUpdater') ? 0 : '50%'}`, fontSize: 12, padding: '1%' },
             };
             if (type === 'custom') {
                 newNode.data = {
                     label: nodeTypeId, selects: {
-                        'handle-0': 'smoothstep',
+                        [nodeTypeId]: 'Add',
                     },
                 };
             }
-
+            console.log('newNode', newNode);
             setNodes((nds) => nds.concat(newNode));
         },
         [reactFlowInstance]
