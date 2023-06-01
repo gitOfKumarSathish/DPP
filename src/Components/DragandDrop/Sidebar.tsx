@@ -15,7 +15,7 @@ export default () => {
       <div className="dndnode function" onDragStart={(event) => onDragStart(event, 'default')} draggable>
         function Node
       </div>
-      <div className="dndnode function" onDragStart={(event) => onDragStart(event, 'textUpdater')} draggable>
+      <div className="dndnode input" onDragStart={(event) => onDragStart(event, 'textUpdater')} draggable>
         textUpdater Node
       </div>
       <div className="dndnode function" onDragStart={(event) => onDragStart(event, 'custom')} draggable>

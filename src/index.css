@@ -144,5 +144,21 @@ button:focus-visible {
 
 .customInputBox {
   width: 80%;
-  margin: 1%;
+  margin: 4% 1%;
+}
+
+.custom-node__select {
+  /* position: relative; */
+  margin-bottom: 10px;
+}
+
+.custom-node__select select {
+  width: 90%;
+  margin-top: 5px;
+  font-size: 10px;
+}
+
+.custom-node__header {
+  padding: 8px 10px;
+  border-bottom: 1px solid #e2e8f0;
 }

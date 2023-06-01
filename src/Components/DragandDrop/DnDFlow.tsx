@@ -21,9 +21,7 @@ import TextUpdaterNode from './TextUpdaterNode';
 let VarId = 0;
 let funId = 0;
 
-const getId = (type: string) => `${type === 'input' ? 'variable_' + VarId++ : 'function_' + funId++}`;
-
-
+const getId = (type: string) => `${((type === 'input' || type === 'textUpdater') || type === 'textUpdater') ? 'variable_' + VarId++ : 'function_' + funId++}`;
 
 export const DnDFlower = () => {
     const [value, setValue] = useState('');
@@ -61,8 +59,6 @@ export const DnDFlower = () => {
     const edgesWithUpdatedTypes = edges.map((edge) => {
         console.log('edge.sourceHandle', edge.sourceHandle, edge.data);
         if (edge.sourceHandle) {
-            const check = nodes.find((node) => node.type === 'custom').data;
-            console.log('check', check);
             const edgeType = nodes.find((node) => node.type === 'custom').data.selects[edge.sourceHandle];
             edge.type = edgeType;
         }
@@ -79,7 +75,13 @@ export const DnDFlower = () => {
             };
         }
         if (node.type === "custom") {
-
+            // const check = node.data;
+            // console.log('object');
+            // console.log('check', Object.values(check.selects));
+            // node.data = {
+            //     ...node.data,
+            //     fnType: Object.values(check.selects)
+            // };
         }
         return node;
     });
@@ -105,7 +107,7 @@ export const DnDFlower = () => {
                 type,
                 position,
                 data: { label: nodeTypeId, value: '' },
-                style: { background: '#fff', border: `1px solid ${type === 'input' ? '#0041d0' : 'green'}`, borderRadius: `${type === 'input' ? 0 : '10px'}`, fontSize: 12 },
+                style: { background: '#fff', border: `1px solid ${(type === 'input' || type === 'textUpdater') ? '#0041d0' : 'green'}`, borderRadius: `${(type === 'input' || type === 'textUpdater') ? 0 : '10px'}`, fontSize: 12 },
             };
             if (type === 'custom') {
                 newNode.data = {

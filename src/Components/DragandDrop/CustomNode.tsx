@@ -49,7 +49,7 @@ function Select({ value, handleId, nodeId }: any) {
 
   return (
     <div className="custom-node__select">
-      <div>Edge Type</div>
+      {/* <div>Edge Type</div> */}
       <select className="nodrag" onChange={onChange} value={value}>
         {options.map((option) => (
           <option key={option.value} value={option.value}>
@@ -65,16 +65,16 @@ function Select({ value, handleId, nodeId }: any) {
 
 function CustomNode({ id, data }: any) {
   return (
-    <>
+    <section className='dropdownArea'>
       <div className="custom-node__header">
-        This is a <strong>custom node</strong>
+        Select a function
       </div>
       <div className="custom-node__body">
         {Object.keys(data.selects).map((handleId) => (
           <Select key={handleId} nodeId={id} value={data.selects[handleId]} handleId={handleId} />
         ))}
       </div>
-    </>
+    </section>
   );
 }
 

@@ -1,11 +1,11 @@
-import { useCallback, useState } from 'react';
-import { Handle, Position } from 'reactflow';
+import React, { memo, useCallback, useState } from 'react';
+import { Handle, useReactFlow, useStoreApi, Position } from 'reactflow';
 
 const handleStyle = { left: 20 };
 
 function TextUpdaterNode(props: any) {
 
-    const onChange = useCallback((evt) => {
+    const onChange = useCallback((evt: { target: { value: any; }; }) => {
         const newText = evt.target.value;
         console.log(newText);
         if (props.onChange) {
