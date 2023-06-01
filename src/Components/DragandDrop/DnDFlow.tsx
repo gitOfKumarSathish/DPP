@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback, useMemo } from 'react';
+import { useState, useRef, useCallback } from 'react';
 import ReactFlow, {
     ReactFlowProvider,
     addEdge,
@@ -22,15 +22,19 @@ let VarId = 0;
 let funId = 0;
 
 const getId = (type: string) => `${((type === 'input' || type === 'textUpdater') || type === 'textUpdater') ? 'variable_' + VarId++ : 'function_' + funId++}`;
-
+const nodeTypes = {
+    custom: CustomNode,
+    textUpdater: TextUpdaterNode
+    // textUpdater: (props: any) => <TextUpdaterNode {...props} />
+};
 export const DnDFlower = () => {
-    const [value, setValue] = useState('');
 
 
-    const nodeTypes = useMemo(() => ({
-        custom: CustomNode,
-        textUpdater: (props: any) => <TextUpdaterNode {...props} onChange={handleTextChange} />
-    }), []);
+    // const nodeTypes = useMemo(() => ({
+    //     custom: CustomNode,
+    //     textUpdater: TextUpdaterNode
+    //     // textUpdater: (props: any) => <TextUpdaterNode {...props} />
+    // }), []);
 
 
     const reactFlowWrapper = useRef(null);
@@ -52,10 +56,7 @@ export const DnDFlower = () => {
         event.preventDefault();
         event.dataTransfer.dropEffect = 'move';
     }, []);
-    const handleTextChange = (e: any) => {
-        console.log('e', e);
-        setValue(e);
-    };
+
     const edgesWithUpdatedTypes = edges.map((edge) => {
         console.log('edge.sourceHandle', edge.sourceHandle, edge.data);
         if (edge.sourceHandle) {
@@ -67,13 +68,13 @@ export const DnDFlower = () => {
     });
 
     const dataWithUpdates = nodes.map((node) => {
-        console.log('node', node);
-        if (node.type === "textUpdater") {
-            node.data = {
-                ...node.data,
-                value
-            };
-        }
+        console.log('Main node', node);
+        // if (node.type === "textUpdater") {
+        //     node.data = {
+        //         ...node.data,
+        //         value
+        //     };
+        // }
         if (node.type === "custom") {
             // const check = node.data;
             // console.log('object');
@@ -101,7 +102,6 @@ export const DnDFlower = () => {
                 y: event.clientY - reactFlowBounds.top,
             });
             const nodeTypeId = getId(type);
-            setValue('');
             let newNode: any = {
                 id: nodeTypeId,
                 type,
