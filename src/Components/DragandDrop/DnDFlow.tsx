@@ -61,6 +61,7 @@ export const DnDFlower = () => {
             console.log('MappedJson', MappedJson);
             console.log('check', check);
             localStorage.setItem(flowKey, JSON.stringify(flow));
+            localStorage.setItem('MappedJson', JSON.stringify(MappedJson));
         }
     }, [reactFlowInstance]);
 
