@@ -68,7 +68,6 @@ function CustomNode({ id, data }: any) {
       <div className="custom-node__body">
         {Object.keys(data.selects).map((handleId, i) => (
           <>
-            {console.log('handleId', handleId)}
             <Select key={i} nodeId={id} value={data.selects[handleId]} handleId={handleId} />
           </>
         ))}

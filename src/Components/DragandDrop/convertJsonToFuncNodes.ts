@@ -10,9 +10,11 @@ export function convertJsonToFuncNodes(jsonData: any): Array<{
 
     const { edges, nodes } = jsonData;
     console.log('nodes', nodes);
-    const funcNodes = nodes.filter((node: { type: string; }) => node.type === "custom").map((node: { id: any; data: { label: any; }; type: string; }) => ({
+    const funcNodes = nodes.filter((node: { type: string; }) => node.type === "custom").map((node: {
+        id: any; data: { selects: any; label: any; }; type: string;
+    }) => ({
         name: node.id,
-        func_label: node.data.label,
+        func_label: node.data.selects[node.data.label],
         // checker: edges.filter((edge: { target: any; }) => edge.target === node.id && node.type === "custom").reduce((acc: any, edge: { source: any; }) => console.log('edge', edge)),
         bind: edges.filter((edge: { target: any; }) => edge.target === node.id && node.type === "custom").reduce((acc: any, edge: { source: any; }) => (
             { ...acc, [edge.source]: edge.source }), {}),
