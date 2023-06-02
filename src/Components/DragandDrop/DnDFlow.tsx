@@ -51,8 +51,14 @@ export const DnDFlower = () => {
     const onSave = useCallback(() => {
         const flowKey = 'example-flow';
         if (reactFlowInstance) {
+
             const flow = reactFlowInstance.toObject();
             const check = convertJsonToFuncNodes(flow);
+            let MappedJson = {
+                "name": "dag",
+                func_nodes: check
+            };
+            console.log('MappedJson', MappedJson);
             console.log('check', check);
             localStorage.setItem(flowKey, JSON.stringify(flow));
         }
