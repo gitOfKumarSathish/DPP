@@ -22,7 +22,7 @@ import TextUpdaterNode from './TextUpdaterNode';
 import { convertJsonToFuncNodes } from './convertJsonToFuncNodes';
 import FunctionUpdaterNode from './FunctionUpdaterNode';
 import { Dagger } from '../../assets/SampleDag';
-import { convertFuncNodeToJson } from './convertFuncNodeToJson';
+import { convertFuncNodeToJsonEdge, convertFuncNodeToJsonNode } from './convertFuncNodeToJson';
 
 
 
@@ -47,8 +47,9 @@ const nodeTypes = {
 };
 export const DnDFlower = () => {
 
-    const funcToJson: any = convertFuncNodeToJson(Dagger);
-    console.log('funcToJson', funcToJson);
+    const funcToJsonNode: any = convertFuncNodeToJsonNode(Dagger);
+    const funcToJsonEdge: any = convertFuncNodeToJsonEdge(Dagger);
+    console.log('funcToJson', funcToJsonNode);
     // const nodeTypes = useMemo(() => ({
     //     custom: CustomNode,
     //     textUpdater: TextUpdaterNode
@@ -57,8 +58,8 @@ export const DnDFlower = () => {
 
 
     const reactFlowWrapper = useRef(null);
-    const [nodes, setNodes, onNodesChange] = useNodesState(funcToJson || []);
-    const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+    const [nodes, setNodes, onNodesChange] = useNodesState(funcToJsonNode || []);
+    const [edges, setEdges, onEdgesChange] = useEdgesState(funcToJsonEdge || []);
     const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance | null>(null);
 
     const onConnect = useCallback((params: Edge | Connection) => setEdges((eds) => addEdge(params, eds)), []);
@@ -73,8 +74,8 @@ export const DnDFlower = () => {
                 "name": "dag",
                 func_nodes: check
             };
-            console.log('MappedJson', MappedJson);
-            console.log('check', check);
+            // console.log('MappedJson', MappedJson);
+            // console.log('check', check);
             localStorage.setItem(flowKey, JSON.stringify(flow));
             localStorage.setItem('MappedJson', JSON.stringify(MappedJson));
         }
@@ -86,7 +87,6 @@ export const DnDFlower = () => {
     }, []);
 
     const edgesWithUpdatedTypes = edges.map((edge: any) => {
-        console.log('edge', edge);
         if (edge.sourceHandle) {
             // const edgeType = nodes.find((node) => node.type === 'custom')?.data.selects[edge.sourceHandle];
             // edge.type = edgeType;
@@ -129,6 +129,9 @@ export const DnDFlower = () => {
 
     const dataWithUpdates = nodes.map((node) => {
         // console.log('Main node', node);
+        // edges.map((edge) => {
+        //     console.log('edge', edge);
+        // });
         return node;
     });
 
