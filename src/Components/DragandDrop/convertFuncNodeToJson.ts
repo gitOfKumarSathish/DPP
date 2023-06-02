@@ -1,5 +1,5 @@
 export function convertFuncNodeToJsonNode(jsonData: any) {
-    const { name, func_nodes } = jsonData;
+    const { func_nodes } = jsonData;
     // console.log('func_nodes', func_nodes);
     let initialNodes: { id: any; type: string; data: { label: any; }; style: { background: string; border: string; borderRadius: string; color: string; fontSize: number; padding: string; }; }[] = [];
     let varNodeCollection: any[] = [];
@@ -65,7 +65,7 @@ export function randomPosition() {
     return Math.floor(Math.random() * 350);
 }
 export function convertFuncNodeToJsonEdge(jsonData: any) {
-    const { name, func_nodes } = jsonData;
+    const { func_nodes } = jsonData;
     let initialEdges: { id: string; markerEnd: { type: string; }; source: string; sourceHandle: string; target: string; targetHandle: null; }[] = [];
     // console.log('func_nodes', func_nodes);
     func_nodes.map((funcNode: {
