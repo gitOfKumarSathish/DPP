@@ -31,7 +31,7 @@ function TextUpdaterNode(props: any) {
                     console.log('node.id changed', node);
                     node.data = {
                         ...node.data,
-                        label: evt.target.value
+                        userInput: evt.target.value
                     };
                 }
                 return node;

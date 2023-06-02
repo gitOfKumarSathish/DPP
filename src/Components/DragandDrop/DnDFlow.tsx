@@ -20,13 +20,14 @@ import Sidebar from './Sidebar';
 import CustomNode from './CustomNode';
 import TextUpdaterNode from './TextUpdaterNode';
 import { convertJsonToFuncNodes } from './convertJsonToFuncNodes';
+import FunctionUpdaterNode from './FunctionUpdaterNode';
 
 let VarId = 0;
 let funId = 0;
 
 const getId = (type: string) => `${(type === 'input' || type === 'textUpdater') ? 'variable_' + VarId++ : 'function_' + funId++}`;
 const nodeTypes = {
-    custom: CustomNode,
+    custom: FunctionUpdaterNode,
     textUpdater: TextUpdaterNode
     // textUpdater: (props: any) => <TextUpdaterNode {...props} />
 };
@@ -63,13 +64,14 @@ export const DnDFlower = () => {
     }, []);
 
     const edgesWithUpdatedTypes = edges.map((edge: any) => {
+        console.log('edge', edge);
         if (edge.sourceHandle) {
             // const edgeType = nodes.find((node) => node.type === 'custom')?.data.selects[edge.sourceHandle];
             // edge.type = edgeType;
             edge.markerEnd = {
                 type: MarkerType.ArrowClosed,
             };
-        }
+        } edge.id = `${edge.source} + ${edge.target}`;
         // console.log('edge', edge);
         return edge;
     });
@@ -94,16 +96,7 @@ export const DnDFlower = () => {
                 data: { label: nodeTypeId },
                 style: customStyle(),
             };
-            if (type === 'custom') {
-                newNode.data = {
-                    label: nodeTypeId, selects: {
-                        [nodeTypeId]: 'Add',
-                    },
-                };
-            }
-            console.log('newNode', newNode);
             setNodes((nds) => nds.concat(newNode));
-
             function customStyle() {
                 return { background: `${(type === 'input' || type === 'textUpdater') ? '#00bfff' : '#32cd32'}`, border: `1px solid ${(type === 'input' || type === 'textUpdater') ? '#00bfff' : '#32cd32'}`, borderRadius: `${(type === 'input' || type === 'textUpdater') ? '50%' : 0}`, fontSize: 12, padding: '1%', color: '#fff' };
             }
@@ -113,7 +106,8 @@ export const DnDFlower = () => {
 
 
     const dataWithUpdates = nodes.map((node) => {
-        // console.log('Main node', node);
+
+        console.log('Main node', node);
         return node;
     });
 
