@@ -45,8 +45,8 @@ function TextUpdaterNode(props: any) {
             <div>
                 {/* <label htmlFor="text">Text:</label> */}
                 <input id="text" name="text" onChange={labelNameChange} className="titleBox" placeholder='variable name' />
-                <hr />
-                <input id="text" name="text" onChange={onChange} className="nodrag customInputBox" placeholder='variable value' />
+                {/* <hr /> */}
+                {/* <input id="text" name="text" onChange={onChange} className="nodrag customInputBox" placeholder='variable value' /> */}
             </div>
             <Handle
                 type="source"

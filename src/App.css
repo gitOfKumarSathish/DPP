@@ -79,7 +79,8 @@
 }
 
 .dndflow .dndnode.input {
-  border-color: #0041d0;
+  border-color: rgb(0, 191, 255);
+  border-radius: 50%;
 }
 
 .dndflow .dndnode.output {
@@ -87,8 +88,8 @@
 }
 
 .dndflow .dndnode.function {
-  border-color: green;
-  border-radius: 50%;
+  border-color: rgb(50, 205, 50);
+  /* border-radius: 50%; */
 }
 
 
@@ -119,6 +120,7 @@
 .customInputBox {
   width: 80%;
   margin: 4% 1%;
+  border-color: transparent;
 }
 
 .custom-node__select {
@@ -139,7 +141,8 @@
 
 .titleBox {
   border: 0;
-  padding-top: 3%;
+  margin: 6%;
+  width: 80%;
 }
 
 input#text:focus-visible {

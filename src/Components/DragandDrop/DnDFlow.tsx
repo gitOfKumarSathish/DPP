@@ -19,6 +19,7 @@ import 'reactflow/dist/style.css';
 import Sidebar from './Sidebar';
 import CustomNode from './CustomNode';
 import TextUpdaterNode from './TextUpdaterNode';
+import { convertJsonToFuncNodes } from './convertJsonToFuncNodes';
 
 let VarId = 0;
 let funId = 0;
@@ -50,6 +51,8 @@ export const DnDFlower = () => {
         const flowKey = 'example-flow';
         if (reactFlowInstance) {
             const flow = reactFlowInstance.toObject();
+            const check = convertJsonToFuncNodes(flow);
+            console.log('check', check);
             localStorage.setItem(flowKey, JSON.stringify(flow));
         }
     }, [reactFlowInstance]);
@@ -88,8 +91,8 @@ export const DnDFlower = () => {
                 id: nodeTypeId,
                 type,
                 position,
-                data: { label: nodeTypeId, value: '' },
-                style: { background: '#fff', border: `1px solid ${(type === 'input' || type === 'textUpdater') ? '#0041d0' : 'green'}`, borderRadius: `${(type === 'input' || type === 'textUpdater') ? 0 : '50%'}`, fontSize: 12, padding: '1%' },
+                data: { label: nodeTypeId },
+                style: customStyle(),
             };
             if (type === 'custom') {
                 newNode.data = {
@@ -100,6 +103,10 @@ export const DnDFlower = () => {
             }
             console.log('newNode', newNode);
             setNodes((nds) => nds.concat(newNode));
+
+            function customStyle() {
+                return { background: `${(type === 'input' || type === 'textUpdater') ? '#00bfff' : '#32cd32'}`, border: `1px solid ${(type === 'input' || type === 'textUpdater') ? '#00bfff' : '#32cd32'}`, borderRadius: `${(type === 'input' || type === 'textUpdater') ? '50%' : 0}`, fontSize: 12, padding: '1%', color: '#fff' };
+            }
         },
         [reactFlowInstance]
     );
