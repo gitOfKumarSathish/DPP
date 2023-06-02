@@ -4,26 +4,35 @@ export function convertJsonToFuncNodes(jsonData: any) {
     console.log('nodes', nodes);
     console.log('edges', edges);
 
-    let funcNode = nodes.filter((node: { type: string; }) => node.type === "custom");
-    let varNode = nodes.filter((node: { type: string; }) => node.type !== "custom");
+    let funcNode = nodes.filter(node => node.type === "custom");
+    let varNode = nodes.filter(node => node.type !== "custom");
     console.log('objects', funcNode);
     console.log('varNode', varNode);
     let mapping: any[] = [];
-    funcNode.forEach((node: { id: any; data: { userInput: any; }; }) => {
+    funcNode.forEach(node => {
         let eachObject: any = {};
         eachObject['name'] = node.id;
         eachObject['func_label'] = node.data.userInput;
         console.log('node', node);
         let cc = {};
-        edges.map((x: { id: string | any[]; target: any; source: any; }) => {
+        edges.map(x => {
             if (x.id.includes(node.id) && x.target === node.id) {
-                varNode.map((vars: { id: string | any[]; data: { userInput: any; }; }) => {
+                varNode.map(vars => {
                     if (vars.id.includes(x.source)) {
-                        console.log('vars', vars);
+
                         Object.assign(cc, { [vars.data.userInput]: vars.data.userInput });
                     }
                 });
             }
+            if (x.id.includes(node.id) && x.source === node.id) {
+                varNode.map(vars => {
+                    if (vars.id.includes(x.target)) {
+                        console.log('vars', vars);
+                        eachObject['out'] = vars.data.userInput;
+                    }
+                });
+            }
+            console.log('cc', cc);
             eachObject['bind'] = cc;
         });
 

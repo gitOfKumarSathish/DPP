@@ -107,7 +107,7 @@ export const DnDFlower = () => {
 
     const dataWithUpdates = nodes.map((node) => {
 
-        console.log('Main node', node);
+        // console.log('Main node', node);
         return node;
     });
 
