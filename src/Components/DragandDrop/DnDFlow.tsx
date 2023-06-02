@@ -21,6 +21,20 @@ import CustomNode from './CustomNode';
 import TextUpdaterNode from './TextUpdaterNode';
 import { convertJsonToFuncNodes } from './convertJsonToFuncNodes';
 import FunctionUpdaterNode from './FunctionUpdaterNode';
+import { Dagger } from '../../assets/SampleDag';
+import { convertFuncNodeToJson } from './convertFuncNodeToJson';
+
+
+
+const initialNodes = [
+    {
+        id: '1',
+        type: 'input',
+        data: { label: 'input node' },
+        position: { x: 250, y: 5 },
+    },
+];
+
 
 let VarId = 0;
 let funId = 0;
@@ -33,7 +47,8 @@ const nodeTypes = {
 };
 export const DnDFlower = () => {
 
-
+    const funcToJson: any = convertFuncNodeToJson(Dagger);
+    console.log('funcToJson', funcToJson);
     // const nodeTypes = useMemo(() => ({
     //     custom: CustomNode,
     //     textUpdater: TextUpdaterNode
@@ -42,7 +57,7 @@ export const DnDFlower = () => {
 
 
     const reactFlowWrapper = useRef(null);
-    const [nodes, setNodes, onNodesChange] = useNodesState([]);
+    const [nodes, setNodes, onNodesChange] = useNodesState(funcToJson || []);
     const [edges, setEdges, onEdgesChange] = useEdgesState([]);
     const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance | null>(null);
 
@@ -113,7 +128,6 @@ export const DnDFlower = () => {
 
 
     const dataWithUpdates = nodes.map((node) => {
-
         // console.log('Main node', node);
         return node;
     });

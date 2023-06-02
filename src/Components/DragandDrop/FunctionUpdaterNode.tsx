@@ -44,7 +44,7 @@ function FunctionUpdaterNode(props: any) {
             <Handle type="target" position={Position.Top} isConnectable={isConnectable} />
             <div>
                 {/* <label htmlFor="text">Text:</label> */}
-                <input id="text" name="text" onChange={labelNameChange} className="titleBox" placeholder='Function name' />
+                <input id="text" name="text" onChange={labelNameChange} className="titleBox" placeholder='Function name' value={props.data.label || ''} />
                 {/* <hr /> */}
                 {/* <input id="text" name="text" onChange={onChange} className="nodrag customInputBox" placeholder='variable value' /> */}
             </div>
