@@ -76,6 +76,8 @@ export function convertFuncNodeToJsonEdge(jsonData: any) {
                 markerEnd: { type: 'arrowclosed' },
                 source: varNode,
                 target: funcNode.name,
+                type: 'smoothstep',
+                animated: true
             };
 
             initialEdges.push(edgeObject);
