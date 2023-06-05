@@ -63,7 +63,7 @@ export const DnDFlower = () => {
     const [nodes, setNodes, onNodesChange] = useNodesState(funcToJsonNode || []);
     const [edges, setEdges, onEdgesChange] = useEdgesState(funcToJsonEdge || []);
     const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance | null>(null);
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isModal, setIsModal] = useState({ open: false, type: 'upload', data: {} });
 
     const onConnect = useCallback((params: Edge | Connection) => setEdges((eds) => addEdge(params, eds)), []);
 
@@ -77,10 +77,17 @@ export const DnDFlower = () => {
                 "name": "dag",
                 func_nodes: check
             };
+
+            setIsModal({
+                open: true,
+                type: 'download',
+                data: MappedJson
+            });
             // console.log('MappedJson', MappedJson);
             // console.log('check', check);
             localStorage.setItem(flowKey, JSON.stringify(flow));
             localStorage.setItem('MappedJson', JSON.stringify(MappedJson));
+
         }
     }, [reactFlowInstance]);
 
@@ -145,8 +152,24 @@ export const DnDFlower = () => {
         return sourceValid !== 'custom' || targetValid !== 'custom';
     };
 
+    const uploadHandler = () => {
+        setIsModal({
+            open: true,
+            type: 'upload',
+            data: {}
+        });
+    };
+
+    const closeModal = () => {
+        setIsModal({
+            open: false,
+            type: 'upload',
+            data: {}
+        });
+    };
+
     return (
-        <div className={`dndflow ${isModalOpen && 'overlayEffect'}`}>
+        <div className={`dndflow ${isModal?.open && 'overlayEffect'}`}>
             <ReactFlowProvider>
                 <Sidebar />
                 <div className="reactflow-wrapper" ref={reactFlowWrapper}>
@@ -175,18 +198,16 @@ export const DnDFlower = () => {
                         <Controls />
                         <Panel position="top-right">
                             <button onClick={onSave}>save</button>
-                            <button onClick={() => setIsModalOpen(true)}>Upload</button>
-
-
+                            <button onClick={uploadHandler}>Upload</button>
                         </Panel>
                     </ReactFlow>
                 </div>
 
             </ReactFlowProvider>
 
-            {isModalOpen && (
+            {isModal?.open && (
                 <div className='overlayPosition'>
-                    <UploadJson onClose={() => setIsModalOpen(false)} />
+                    <UploadJson onClose={closeModal} type={isModal?.type} data={isModal?.data} />
                 </div>
             )}
 
