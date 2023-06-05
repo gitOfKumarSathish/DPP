@@ -136,8 +136,10 @@ export const DnDFlower = () => {
     useEffect(() => {
         // Update the position of the nodes
         for (let i = 0; i < nodes.length; i++) {
-            nodes[i].x = i * 100;
-            nodes[i].y = i * 100;
+            console.log('nodes[i]', nodes[i]);
+            // position: { x: 250, y: 5 },
+            nodes[i].position.x = i * 100;
+            nodes[i].position.y = i * 100;
         }
     }, [nodes]);
 
