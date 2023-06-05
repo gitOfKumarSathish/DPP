@@ -253,3 +253,17 @@ p.jsonError {
   font-size: 12px;
   margin: 0;
 }
+
+button.saveBtn {
+  margin-right: 10px;
+}
+
+.react-flow__panel.top.right {
+  margin: 1% 0;
+  width: 24%;
+}
+
+button.panelBtn {
+  width: 35%;
+  text-align: center;
+}

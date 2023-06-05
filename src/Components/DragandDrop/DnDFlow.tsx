@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback, useEffect } from 'react';
+import { useState, useRef, useCallback, useEffect, memo } from 'react';
 import ReactFlow, {
     ReactFlowProvider,
     addEdge,
@@ -92,6 +92,7 @@ export const DnDFlower = () => {
     const [edges, setEdges, onEdgesChange] = useEdgesState([]);
     const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance | null>(null);
     const [isModal, setIsModal] = useState({ open: false, type: 'upload', data: {} });
+    const [uploadOver, setUploadOver] = useState(false);
 
     const onConnect = useCallback((params: Edge | Connection) => setEdges((eds) => addEdge(params, eds)), []);
 
@@ -109,11 +110,16 @@ export const DnDFlower = () => {
         [nodes, edges]
     );
 
+    useEffect(() => {
+        onLayout('TB'); // Set vertical layout on component load
+    }, [uploadOver]);
+
     const handleUpload = (data: any) => {
         const funcToJsonNode: any = convertFuncNodeToJsonNode(data);
         const funcToJsonEdge: any = convertFuncNodeToJsonEdge(data);
         setNodes(funcToJsonNode);
         setEdges(funcToJsonEdge);
+        setUploadOver(true);
     };
 
     const onSave = useCallback(() => {
@@ -234,14 +240,14 @@ export const DnDFlower = () => {
                         />
                         <Controls />
                         <Panel position="top-right">
-                            <button onClick={onSave}>save</button>
-                            <button onClick={uploadHandler}>Upload</button>
+                            <button onClick={onSave} className='saveBtn panelBtn'>save</button>
+                            <button onClick={uploadHandler} className='panelBtn'>Upload</button>
                         </Panel>
 
-                        <Panel position="top-left">
+                        {/* <Panel position="top-left">
                             <button onClick={() => onLayout('TB')}>vertical layout</button>
                             <button onClick={() => onLayout('LR')}>horizontal layout</button>
-                        </Panel>
+                        </Panel> */}
                     </ReactFlow>
                 </div>
 
@@ -261,4 +267,6 @@ export const DnDFlower = () => {
 
 
 };
+
+export default memo(DnDFlower)
 
