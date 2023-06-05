@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, memo } from 'react';
 
-function UploadJson(props: any) {
+function UploadDownload(props: any) {
     const { onClose, type } = props;
     const [data, setData] = useState('');
     const [copied, setCopied] = useState(false);
+    const [errorExist, setErrorExist] = useState(false);
     const [dataType, setDataType] = useState({ title: 'Paste Your JSON', type: type, data: props.data });
 
     const handleChange = (event: { target: { value: any; }; }) => {
@@ -17,6 +18,7 @@ function UploadJson(props: any) {
         try {
             JSON.parse(data);
         } catch (error) {
+            setErrorExist(true);
             return false;
         }
         localStorage.setItem('data', (data));
@@ -58,6 +60,7 @@ function UploadJson(props: any) {
                             placeholder={dataType.title}
                             required
                         />
+                        {errorExist && <p className='jsonError'>The JSON upload failed. Please check the JSON and try again</p>}
                         <button type="submit" className='uploadSubmitButton btnSize'>Submit</button>
                         <button onClick={onClose} className='uploadCancelButton btnSize'>Close</button>
                     </form>
@@ -85,4 +88,4 @@ function UploadJson(props: any) {
     );
 }
 
-export default UploadJson;
+export default memo(UploadDownload);

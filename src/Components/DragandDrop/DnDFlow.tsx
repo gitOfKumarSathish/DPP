@@ -21,7 +21,7 @@ import { convertJsonToFuncNodes } from './convertJsonToFuncNodes';
 import { Dagger } from '../../assets/SampleDag';
 import { convertFuncNodeToJsonEdge, convertFuncNodeToJsonNode } from './convertFuncNodeToJson';
 import NodeCreator from './NodeCreator';
-import UploadJson from './UploadJson';
+import UploadDownload from './UploadDownload';
 
 
 
@@ -207,7 +207,7 @@ export const DnDFlower = () => {
 
             {isModal?.open && (
                 <div className='overlayPosition'>
-                    <UploadJson onClose={closeModal} type={isModal?.type} data={isModal?.data} />
+                    <UploadDownload onClose={closeModal} type={isModal?.type} data={isModal?.data} />
                 </div>
             )}
 

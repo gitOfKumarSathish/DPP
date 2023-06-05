@@ -245,3 +245,9 @@ textarea.textAreaSize {
 .btnSize {
   width: 25%;
 }
+
+p.jsonError {
+  color: red;
+  font-size: 12px;
+  margin: 0;
+}
