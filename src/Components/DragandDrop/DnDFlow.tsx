@@ -17,12 +17,10 @@ import ReactFlow, {
 import 'reactflow/dist/style.css';
 
 import Sidebar from './Sidebar';
-import CustomNode from './CustomNode';
-import TextUpdaterNode from './TextUpdaterNode';
 import { convertJsonToFuncNodes } from './convertJsonToFuncNodes';
-import FunctionUpdaterNode from './FunctionUpdaterNode';
 import { Dagger } from '../../assets/SampleDag';
 import { convertFuncNodeToJsonEdge, convertFuncNodeToJsonNode } from './convertFuncNodeToJson';
+import NodeCreator from './NodeCreator';
 
 
 
@@ -41,15 +39,18 @@ let funId = 0;
 
 const getId = (type: string) => `${(type === 'input' || type === 'textUpdater') ? 'variable_' + VarId++ : 'function_' + funId++}`;
 const nodeTypes = {
-    custom: FunctionUpdaterNode,
-    textUpdater: TextUpdaterNode
-    // textUpdater: (props: any) => <TextUpdaterNode {...props} />
+    custom: (props: any) => <NodeCreator {...props} type='funcNode' />,
+    textUpdater: (props: any) => <NodeCreator {...props} type='varNode' />,
 };
 export const DnDFlower = () => {
 
-    const funcToJsonNode: any = convertFuncNodeToJsonNode(Dagger);
-    const funcToJsonEdge: any = convertFuncNodeToJsonEdge(Dagger);
-    console.log('funcToJson', funcToJsonNode);
+    // const funcToJsonNode: any = convertFuncNodeToJsonNode(Dagger);
+    // const funcToJsonEdge: any = convertFuncNodeToJsonEdge(Dagger);
+    // console.log('funcToJson', funcToJsonNode);
+
+    const funcToJsonNode: any = [];
+    const funcToJsonEdge: any = [];
+
     // const nodeTypes = useMemo(() => ({
     //     custom: CustomNode,
     //     textUpdater: TextUpdaterNode
@@ -120,7 +121,7 @@ export const DnDFlower = () => {
             };
             setNodes((nds) => nds.concat(newNode));
             function customStyle() {
-                return { background: `${(type === 'input' || type === 'textUpdater') ? '#00bfff' : '#32cd32'}`, border: `1px solid ${(type === 'input' || type === 'textUpdater') ? '#00bfff' : '#32cd32'}`, borderRadius: `${(type === 'input' || type === 'textUpdater') ? '50%' : 0}`, fontSize: 12, padding: '1%', color: '#fff' };
+                return { background: '#1f2937', fontSize: 12, color: '#fff' };
             }
         },
         [reactFlowInstance]
@@ -163,7 +164,12 @@ export const DnDFlower = () => {
                         fitView
                         nodeTypes={nodeTypes}
                     >
-                        <Background color="#ccc" variant={BackgroundVariant.Dots} />
+                        {/* <Background color="#ccc" variant={BackgroundVariant.Dots} /> */}
+                        <Background
+                            variant={BackgroundVariant.Lines}
+                            color="#2a2b2d"
+                            style={{ backgroundColor: "#1E1F22" }}
+                        />
                         <Controls />
                         <Panel position="top-right">
                             <button onClick={onSave}>save</button>
