@@ -21,6 +21,7 @@ import { convertJsonToFuncNodes } from './convertJsonToFuncNodes';
 import { Dagger } from '../../assets/SampleDag';
 import { convertFuncNodeToJsonEdge, convertFuncNodeToJsonNode } from './convertFuncNodeToJson';
 import NodeCreator from './NodeCreator';
+import UploadJson from './UploadJson';
 
 
 
@@ -62,6 +63,7 @@ export const DnDFlower = () => {
     const [nodes, setNodes, onNodesChange] = useNodesState(funcToJsonNode || []);
     const [edges, setEdges, onEdgesChange] = useEdgesState(funcToJsonEdge || []);
     const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance | null>(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     const onConnect = useCallback((params: Edge | Connection) => setEdges((eds) => addEdge(params, eds)), []);
 
@@ -144,7 +146,7 @@ export const DnDFlower = () => {
     };
 
     return (
-        <div className="dndflow">
+        <div className={`dndflow ${isModalOpen && 'overlayEffect'}`}>
             <ReactFlowProvider>
                 <Sidebar />
                 <div className="reactflow-wrapper" ref={reactFlowWrapper}>
@@ -173,11 +175,27 @@ export const DnDFlower = () => {
                         <Controls />
                         <Panel position="top-right">
                             <button onClick={onSave}>save</button>
+                            <button onClick={() => setIsModalOpen(true)}>Upload</button>
+
+
                         </Panel>
                     </ReactFlow>
                 </div>
+
             </ReactFlowProvider>
+
+            {isModalOpen && (
+                <div className='overlayPosition'>
+                    <UploadJson onClose={() => setIsModalOpen(false)} />
+                </div>
+            )}
+
+
+
         </div>
+
     );
+
+
 };
 
