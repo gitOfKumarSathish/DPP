@@ -3,8 +3,7 @@ import { Handle, useReactFlow, Position, useStoreApi } from 'reactflow';
 
 function NodeCreator(props: any) {
     const { id, isConnectable, type } = props;
-    console.log({ id, isConnectable, type });
-    const [valueText, setValueText] = useState();
+    const [valueText, setValueText] = useState(props.data.label);
     const [nodeType, setNodeType] = useState({ title: 'func_node', label: 'func_label', placeHolder: 'function name' });
     const { setNodes } = useReactFlow();
     const store: any = useStoreApi();

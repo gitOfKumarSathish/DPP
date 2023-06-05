@@ -1,6 +1,8 @@
 import React, { useState, memo } from 'react';
 
-function UploadDownload(props: { data?: any; type?: any; onClose?: any; }) {
+function UploadDownload(props: {
+    onDataUploaded(parsedData: any): unknown; data?: any; type?: any; onClose?: any;
+}) {
     const { onClose } = props;
     const [data, setData] = useState(JSON.stringify(props.data, null, 2));
     const [copied, setCopied] = useState(false);
@@ -13,7 +15,8 @@ function UploadDownload(props: { data?: any; type?: any; onClose?: any; }) {
     const handleSubmit = async (event: { preventDefault: () => void; }) => {
         event.preventDefault();
         try {
-            JSON.parse(data);
+            const parsedData = JSON.parse(data);
+            props.onDataUploaded(parsedData);
         } catch (error) {
             setErrorExist(true);
             return;

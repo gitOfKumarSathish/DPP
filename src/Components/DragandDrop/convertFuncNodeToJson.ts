@@ -1,7 +1,7 @@
 export function convertFuncNodeToJsonNode(jsonData: any) {
     const { func_nodes } = jsonData;
     // console.log('func_nodes', func_nodes);
-    let initialNodes: { id: any; type: string; data: { label: any; }; style: { background: string; border: string; borderRadius: string; color: string; fontSize: number; padding: string; }; }[] = [];
+    let initialNodes: { id: any; type: string; data: { label: any; }; }[] = [];
     let varNodeCollection: any[] = [];
     let outNodeCollection: ((arg0: string, out: any) => unknown)[] = [];
     func_nodes.map((funcNode: {
@@ -13,14 +13,6 @@ export function convertFuncNodeToJsonNode(jsonData: any) {
             type: 'custom',
             data: {
                 label: funcNode.func_label
-            },
-            style: {
-                background: "#32cd32",
-                border: "1px solid #32cd32",
-                borderRadius: "0",
-                color: "#fff",
-                fontSize: 12,
-                padding: "1%"
             },
             position: { x: randomPosition() + index, y: randomPosition() + index },
         };
@@ -44,14 +36,6 @@ export function convertFuncNodeToJsonNode(jsonData: any) {
             type: 'textUpdater',
             data: {
                 label: varNode
-            },
-            style: {
-                background: "#00bfff",
-                border: "1px solid #00bfff",
-                borderRadius: "50%",
-                color: "#fff",
-                fontSize: 12,
-                padding: "1%"
             },
             position: { x: randomPosition() + index, y: randomPosition() + index },
         };

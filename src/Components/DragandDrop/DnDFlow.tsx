@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback } from 'react';
+import { useState, useRef, useCallback, useEffect } from 'react';
 import ReactFlow, {
     ReactFlowProvider,
     addEdge,
@@ -10,7 +10,6 @@ import ReactFlow, {
     Connection,
     Edge,
     ReactFlowInstance,
-    applyNodeChanges,
     MarkerType,
     BackgroundVariant,
 } from 'reactflow';
@@ -18,7 +17,6 @@ import 'reactflow/dist/style.css';
 
 import Sidebar from './Sidebar';
 import { convertJsonToFuncNodes } from './convertJsonToFuncNodes';
-import { Dagger } from '../../assets/SampleDag';
 import { convertFuncNodeToJsonEdge, convertFuncNodeToJsonNode } from './convertFuncNodeToJson';
 import NodeCreator from './NodeCreator';
 import UploadDownload from './UploadDownload';
@@ -35,19 +33,12 @@ const initialNodes = [
 ];
 
 
-let VarId = 0;
-let funId = 0;
-
-const getId = (type: string) => `${(type === 'input' || type === 'textUpdater') ? 'variable_' + VarId++ : 'function_' + funId++}`;
+const getId = (type: string) => `${(type === 'input' || type === 'textUpdater') ? 'variable_' + Math.floor(Math.random() * 1000) : 'function_' + Math.floor(Math.random() * 1000)}`;
 const nodeTypes = {
     custom: (props: any) => <NodeCreator {...props} type='funcNode' />,
     textUpdater: (props: any) => <NodeCreator {...props} type='varNode' />,
 };
 export const DnDFlower = () => {
-
-    // const funcToJsonNode: any = convertFuncNodeToJsonNode(Dagger);
-    // const funcToJsonEdge: any = convertFuncNodeToJsonEdge(Dagger);
-    // console.log('funcToJson', funcToJsonNode);
 
     const funcToJsonNode: any = [];
     const funcToJsonEdge: any = [];
@@ -67,12 +58,22 @@ export const DnDFlower = () => {
 
     const onConnect = useCallback((params: Edge | Connection) => setEdges((eds) => addEdge(params, eds)), []);
 
+    const handleUpload = (data: any) => {
+        const funcToJsonNode: any = convertFuncNodeToJsonNode(data);
+        const funcToJsonEdge: any = convertFuncNodeToJsonEdge(data);
+        setNodes(funcToJsonNode);
+        setEdges(funcToJsonEdge);
+        console.log('funcToJson', funcToJsonNode);
+        console.log('funcToJsonEdge', funcToJsonEdge);
+    };
+
     const onSave = useCallback(() => {
         const flowKey = 'example-flow';
         if (reactFlowInstance) {
-
             const flow = reactFlowInstance.toObject();
+            console.log('flow', flow);
             const check = convertJsonToFuncNodes(flow);
+            console.log('check', check);
             let MappedJson = {
                 "name": "dag",
                 func_nodes: check
@@ -89,7 +90,7 @@ export const DnDFlower = () => {
             localStorage.setItem('MappedJson', JSON.stringify(MappedJson));
 
         }
-    }, [reactFlowInstance]);
+    }, [reactFlowInstance, nodes]);
 
     const onDragOver = useCallback((event: { preventDefault: () => void; dataTransfer: { dropEffect: string; }; }) => {
         event.preventDefault();
@@ -125,16 +126,20 @@ export const DnDFlower = () => {
                 id: nodeTypeId,
                 type,
                 position,
-                data: { label: nodeTypeId },
-                style: customStyle(),
+                data: { label: '' },
             };
             setNodes((nds) => nds.concat(newNode));
-            function customStyle() {
-                return { background: '#1f2937', fontSize: 12, color: '#fff' };
-            }
         },
         [reactFlowInstance]
     );
+
+    useEffect(() => {
+        // Update the position of the nodes
+        for (let i = 0; i < nodes.length; i++) {
+            nodes[i].x = i * 100;
+            nodes[i].y = i * 100;
+        }
+    }, [nodes]);
 
 
     const dataWithUpdates = nodes.map((node) => {
@@ -156,7 +161,29 @@ export const DnDFlower = () => {
         setIsModal({
             open: true,
             type: 'upload',
-            data: {}
+            data: {
+                "name": "dag",
+                "func_nodes": [
+                    {
+                        "name": "function_0",
+                        "func_label": "add",
+                        "bind": {
+                            "1": "1",
+                            "2": "2"
+                        },
+                        "out": "4"
+                    },
+                    {
+                        "name": "function_1",
+                        "func_label": "mul",
+                        "bind": {
+                            "2": "2",
+                            "3": "3"
+                        },
+                        "out": "5"
+                    }
+                ]
+            }
         });
     };
 
@@ -167,6 +194,8 @@ export const DnDFlower = () => {
             data: {}
         });
     };
+
+
 
     return (
         <div className={`dndflow ${isModal?.open && 'overlayEffect'}`}>
@@ -207,7 +236,7 @@ export const DnDFlower = () => {
 
             {isModal?.open && (
                 <div className='overlayPosition'>
-                    <UploadDownload onClose={closeModal} type={isModal?.type} data={isModal?.data} />
+                    <UploadDownload onClose={closeModal} type={isModal?.type} data={isModal?.data} onDataUploaded={handleUpload} />
                 </div>
             )}
 

@@ -181,6 +181,8 @@ h4.nodeTitle.varNode {
   align-items: center;
   padding: 0 8%;
   font-size: 12px;
+  background: #1f2937;
+  color: #fff;
 }
 
 .flexProps.varNode {
