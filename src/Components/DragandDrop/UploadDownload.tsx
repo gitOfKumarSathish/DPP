@@ -1,90 +1,72 @@
-import React, { useState, useEffect, memo } from 'react';
+import React, { useState, memo } from 'react';
 
-function UploadDownload(props: any) {
-    const { onClose, type } = props;
-    const [data, setData] = useState('');
+function UploadDownload(props: { data?: any; type?: any; onClose?: any; }) {
+    const { onClose } = props;
+    const [data, setData] = useState(JSON.stringify(props.data, null, 2));
     const [copied, setCopied] = useState(false);
     const [errorExist, setErrorExist] = useState(false);
-    const [dataType, setDataType] = useState({ title: 'Paste Your JSON', type: type, data: props.data });
 
-    const handleChange = (event: { target: { value: any; }; }) => {
-        const value = event.target.value;
-        setData(value);
+    const handleChange = (event: { target: { value: React.SetStateAction<string>; }; }) => {
+        setData(event.target.value);
     };
 
-    const handleSubmit = (event: { preventDefault: () => void; }) => {
+    const handleSubmit = async (event: { preventDefault: () => void; }) => {
         event.preventDefault();
-        // Check if the data is a valid JSON object
         try {
             JSON.parse(data);
         } catch (error) {
             setErrorExist(true);
-            return false;
+            return;
         }
-        localStorage.setItem('data', (data));
-        // The data is a valid JSON object
-        onClose(false);
-        return true;
-    };
-
-    useEffect(() => {
-        if (dataType.type === 'download') {
-            setDataType({ title: 'Copy Your JSON', type: type, data: props.data });
+        if (props.type === 'upload') {
+            localStorage.setItem('data', data);
         } else {
-            setDataType({ title: 'Paste Your JSON', type: type, data: data });
+            navigator.clipboard.writeText(data);
         }
-    }, [props]);
-    console.log('dataType', dataType);
-    console.log('data', data);
+        onClose();
+    };
 
     const handleCopy = () => {
-        const el = document.createElement('textarea');
-        el.textContent = JSON.stringify(dataType.data, null, 2);
-        el.select();
-        console.log('el', el);
-        // document.execCommand('copy');
-        navigator.clipboard.writeText(el.textContent);
+        navigator.clipboard.writeText(data);
         setCopied(true);
     };
+
     return (
         <div className='ModalBox'>
             <div>
-                {dataType?.type === 'upload' ?
+                {props.type === 'upload' ? (
                     <form onSubmit={handleSubmit}>
-                        <h3 className='ModalTitle'>{dataType.title}</h3>
+                        <h3 className='ModalTitle'>Paste Your JSON</h3>
                         <textarea
                             name="data"
                             value={data}
                             onChange={handleChange}
                             className='textAreaSize'
-                            placeholder={dataType.title}
+                            placeholder="Paste Your JSON"
                             required
                         />
                         {errorExist && <p className='jsonError'>The JSON upload failed. Please check the JSON and try again</p>}
                         <button type="submit" className='uploadSubmitButton btnSize'>Submit</button>
                         <button onClick={onClose} className='uploadCancelButton btnSize'>Close</button>
                     </form>
-                    :
-                    <>
-                        <h3 className='ModalTitle'>{dataType.title}</h3>
+                ) : (
+                    <div>
+                        <h3 className='ModalTitle'>Copy Your JSON</h3>
                         <textarea
                             name="data"
                             id="textarea"
-                            value={JSON.stringify(dataType.data)}
-                            onChange={handleChange}
+                            value={data}
                             className='textAreaSize'
-                            placeholder={dataType.title}
+                            placeholder="Copy Your JSON"
                             required
+                            readOnly
                         />
-                        <button onClick={handleCopy} className='uploadSubmitButton btnSize'>{copied ? 'Copied!' : 'Copy'} </button>
-
+                        <button onClick={handleCopy} className='uploadSubmitButton btnSize'>{copied ? 'Copied!' : 'Copy'}</button>
                         <button onClick={onClose} className='uploadCancelButton btnSize'>Close</button>
-                    </>
-                }
+                    </div>
+                )}
             </div>
-
         </div>
-
     );
 }
 
