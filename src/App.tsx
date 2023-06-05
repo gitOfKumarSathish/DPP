@@ -8,6 +8,7 @@ import Playground from './Components/AddNode/Playground';
 import DnDFlow from './Components/AddNode/Playground';
 import StoreFlow from './Components/Store/StoreFlow';
 import { DnDFlower } from './Components/DragandDrop/DnDFlow';
+import 'reactflow/dist/style.css';
 
 function App() {
   const [count, setCount] = useState(0);

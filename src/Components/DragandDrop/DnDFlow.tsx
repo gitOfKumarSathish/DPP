@@ -14,12 +14,54 @@ import ReactFlow, {
     BackgroundVariant,
 } from 'reactflow';
 import 'reactflow/dist/style.css';
+import dagre from 'dagre';
 
 import Sidebar from './Sidebar';
 import { convertJsonToFuncNodes } from './convertJsonToFuncNodes';
 import { convertFuncNodeToJsonEdge, convertFuncNodeToJsonNode } from './convertFuncNodeToJson';
 import NodeCreator from './NodeCreator';
 import UploadDownload from './UploadDownload';
+import { Dagger } from '../../assets/SampleDag';
+
+
+const dagreGraph = new dagre.graphlib.Graph();
+dagreGraph.setDefaultEdgeLabel(() => ({}));
+
+const nodeWidth = 200;
+const nodeHeight = 75;
+
+const getLayoutedElements = (nodes: any[], edges: any[], direction = 'TB') => {
+    const isHorizontal = direction === 'TB';
+    console.log('direction', direction);
+    dagreGraph.setGraph({ rankdir: direction });
+
+    nodes.forEach((node: { id: any; }) => {
+        dagreGraph.setNode(node.id, { width: nodeWidth, height: nodeHeight });
+    });
+
+    edges.forEach((edge: { source: any; target: any; }) => {
+        dagreGraph.setEdge(edge.source, edge.target);
+    });
+
+    dagre.layout(dagreGraph);
+
+    nodes.forEach((node: { id: any; targetPosition: string; sourcePosition: string; position: { x: number; y: number; }; }) => {
+        const nodeWithPosition = dagreGraph.node(node.id);
+        node.targetPosition = isHorizontal ? 'left' : 'top';
+        node.sourcePosition = isHorizontal ? 'right' : 'bottom';
+
+        // We are shifting the dagre node position (anchor=center center) to the top left
+        // so it matches the React Flow node anchor point (top left).
+        node.position = {
+            x: nodeWithPosition.x - nodeWidth / 2,
+            y: nodeWithPosition.y - nodeHeight / 2,
+        };
+
+        return node;
+    });
+
+    return { nodes, edges };
+};
 
 
 
@@ -39,44 +81,48 @@ const nodeTypes = {
     textUpdater: (props: any) => <NodeCreator {...props} type='varNode' />,
 };
 export const DnDFlower = () => {
-
-    const funcToJsonNode: any = [];
-    const funcToJsonEdge: any = [];
-
     // const nodeTypes = useMemo(() => ({
     //     custom: CustomNode,
     //     textUpdater: TextUpdaterNode
     //     // textUpdater: (props: any) => <TextUpdaterNode {...props} />
     // }), []);
 
-
     const reactFlowWrapper = useRef(null);
-    const [nodes, setNodes, onNodesChange] = useNodesState(funcToJsonNode || []);
-    const [edges, setEdges, onEdgesChange] = useEdgesState(funcToJsonEdge || []);
+    const [nodes, setNodes, onNodesChange] = useNodesState([]);
+    const [edges, setEdges, onEdgesChange] = useEdgesState([]);
     const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance | null>(null);
     const [isModal, setIsModal] = useState({ open: false, type: 'upload', data: {} });
 
     const onConnect = useCallback((params: Edge | Connection) => setEdges((eds) => addEdge(params, eds)), []);
+
+    const onLayout = useCallback(
+        (direction: string | undefined) => {
+            const { nodes: layoutedNodes, edges: layoutedEdges } = getLayoutedElements(
+                nodes,
+                edges,
+                direction
+            );
+
+            setNodes([...layoutedNodes]);
+            setEdges([...layoutedEdges]);
+        },
+        [nodes, edges]
+    );
 
     const handleUpload = (data: any) => {
         const funcToJsonNode: any = convertFuncNodeToJsonNode(data);
         const funcToJsonEdge: any = convertFuncNodeToJsonEdge(data);
         setNodes(funcToJsonNode);
         setEdges(funcToJsonEdge);
-        console.log('funcToJson', funcToJsonNode);
-        console.log('funcToJsonEdge', funcToJsonEdge);
     };
 
     const onSave = useCallback(() => {
         const flowKey = 'example-flow';
         if (reactFlowInstance) {
             const flow = reactFlowInstance.toObject();
-            console.log('flow', flow);
-            const check = convertJsonToFuncNodes(flow);
-            console.log('check', check);
             let MappedJson = {
                 "name": "dag",
-                func_nodes: check
+                func_nodes: convertJsonToFuncNodes(flow)
             };
 
             setIsModal({
@@ -84,13 +130,11 @@ export const DnDFlower = () => {
                 type: 'download',
                 data: MappedJson
             });
-            // console.log('MappedJson', MappedJson);
-            // console.log('check', check);
             localStorage.setItem(flowKey, JSON.stringify(flow));
             localStorage.setItem('MappedJson', JSON.stringify(MappedJson));
 
         }
-    }, [reactFlowInstance, nodes]);
+    }, [reactFlowInstance]);
 
     const onDragOver = useCallback((event: { preventDefault: () => void; dataTransfer: { dropEffect: string; }; }) => {
         event.preventDefault();
@@ -105,7 +149,6 @@ export const DnDFlower = () => {
                 type: MarkerType.ArrowClosed,
             };
         } edge.id = `${edge.source} + ${edge.target}`;
-        // console.log('edge', edge);
         return edge;
     });
 
@@ -133,24 +176,8 @@ export const DnDFlower = () => {
         [reactFlowInstance]
     );
 
-    useEffect(() => {
-        // Update the position of the nodes
-        for (let i = 0; i < nodes.length; i++) {
-            console.log('nodes[i]', nodes[i]);
-            // position: { x: 250, y: 5 },
-            nodes[i].position.x = i * 100;
-            nodes[i].position.y = i * 100;
-        }
-    }, [nodes]);
 
-
-    const dataWithUpdates = nodes.map((node) => {
-        // console.log('Main node', node);
-        // edges.map((edge) => {
-        //     console.log('edge', edge);
-        // });
-        return node;
-    });
+    const dataWithUpdates = nodes.map((node) => node);
 
     const isValidConnection = (connection: any) => {
         const { source, target } = connection;
@@ -163,29 +190,7 @@ export const DnDFlower = () => {
         setIsModal({
             open: true,
             type: 'upload',
-            data: {
-                "name": "dag",
-                "func_nodes": [
-                    {
-                        "name": "function_0",
-                        "func_label": "add",
-                        "bind": {
-                            "1": "1",
-                            "2": "2"
-                        },
-                        "out": "4"
-                    },
-                    {
-                        "name": "function_1",
-                        "func_label": "mul",
-                        "bind": {
-                            "2": "2",
-                            "3": "3"
-                        },
-                        "out": "5"
-                    }
-                ]
-            }
+            data: Dagger
         });
     };
 
@@ -207,7 +212,8 @@ export const DnDFlower = () => {
                     <ReactFlow
                         // nodes={nodes}
                         nodes={dataWithUpdates}
-
+                        snapToGrid={true}
+                        snapGrid={[2, 2]}
                         // edges={edges}
                         edges={edgesWithUpdatedTypes}
                         onNodesChange={onNodesChange}
@@ -230,6 +236,11 @@ export const DnDFlower = () => {
                         <Panel position="top-right">
                             <button onClick={onSave}>save</button>
                             <button onClick={uploadHandler}>Upload</button>
+                        </Panel>
+
+                        <Panel position="top-left">
+                            <button onClick={() => onLayout('TB')}>vertical layout</button>
+                            <button onClick={() => onLayout('LR')}>horizontal layout</button>
                         </Panel>
                     </ReactFlow>
                 </div>

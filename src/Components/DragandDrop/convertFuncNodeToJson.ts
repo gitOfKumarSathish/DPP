@@ -14,7 +14,8 @@ export function convertFuncNodeToJsonNode(jsonData: any) {
             data: {
                 label: funcNode.func_label
             },
-            position: { x: randomPosition() + index, y: randomPosition() + index },
+            position: { x: randomPosition(), y: randomPosition() },
+            // position: { x: 0, y: 0 },
         };
         initialNodes.push(funcObject);
 
@@ -37,7 +38,8 @@ export function convertFuncNodeToJsonNode(jsonData: any) {
             data: {
                 label: varNode
             },
-            position: { x: randomPosition() + index, y: randomPosition() + index },
+            position: { x: randomPosition(), y: randomPosition() },
+            // position: { x: 0, y: 0 },
         };
         initialNodes.push(varObject);
     });
@@ -61,6 +63,8 @@ export function convertFuncNodeToJsonEdge(jsonData: any) {
             markerEnd: { type: 'arrowclosed' },
             source: funcNode.name,
             target: funcNode.out,
+            type: 'smoothstep',
+            animated: true
         };
 
         initialEdges.push(edgeObject);
