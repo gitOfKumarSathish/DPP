@@ -48,3 +48,54 @@ export const Dagger = {
         }
     ]
 };
+
+export const changedDager = {
+    "name": "dag",
+    "func_nodes": [
+        {
+            "name": "function_89",
+            "func_label": "times0",
+            "bind": {
+                "fpr": "fpr",
+                "n": "n"
+            },
+            "out": "fp_cost_p_unit"
+        },
+        {
+            "name": "function_635",
+            "func_label": "times1",
+            "bind": {
+                "fnr": "fnr",
+                "n": "n"
+            },
+            "out": "fn"
+        },
+        {
+            "name": "function_494",
+            "func_label": "times2",
+            "bind": {
+                "fp": "fp",
+                "fp_cost_p_unit": "fp_cost_p_unit"
+            },
+            "out": "fpcost"
+        },
+        {
+            "name": "function_634",
+            "func_label": "times3",
+            "bind": {
+                "fn": "fn",
+                "fn_cost_p_unit": "fn_cost_p_unit"
+            },
+            "out": "fncost"
+        },
+        {
+            "name": "function_429",
+            "func_label": "add",
+            "bind": {
+                "fpcost": "fpcost",
+                "fncost": "fncost"
+            },
+            "out": "total_cost"
+        }
+    ]
+}; 

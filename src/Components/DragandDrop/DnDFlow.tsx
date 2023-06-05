@@ -21,7 +21,7 @@ import { convertJsonToFuncNodes } from './convertJsonToFuncNodes';
 import { convertFuncNodeToJsonEdge, convertFuncNodeToJsonNode } from './convertFuncNodeToJson';
 import NodeCreator from './NodeCreator';
 import UploadDownload from './UploadDownload';
-import { Dagger } from '../../assets/SampleDag';
+import { Dagger, changedDager } from '../../assets/SampleDag';
 
 
 const dagreGraph = new dagre.graphlib.Graph();
@@ -111,16 +111,26 @@ export const DnDFlower = () => {
     );
 
     useEffect(() => {
+        console.log('object');
         onLayout('TB'); // Set vertical layout on component load
     }, [uploadOver]);
 
-    const handleUpload = (data: any) => {
+    // const handleUpload = (data: any) => {
+    //     const funcToJsonNode: any = convertFuncNodeToJsonNode(data);
+    //     const funcToJsonEdge: any = convertFuncNodeToJsonEdge(data);
+    //     setNodes(funcToJsonNode);
+    //     setEdges(funcToJsonEdge);
+    //     setUploadOver(true);
+    // };
+
+    const handleUpload = useCallback((data) => {
+        setUploadOver(false);
         const funcToJsonNode: any = convertFuncNodeToJsonNode(data);
         const funcToJsonEdge: any = convertFuncNodeToJsonEdge(data);
         setNodes(funcToJsonNode);
         setEdges(funcToJsonEdge);
-        setUploadOver(true);
-    };
+        setUploadOver(!uploadOver);
+    }, [setNodes, setEdges, setUploadOver]);
 
     const onSave = useCallback(() => {
         const flowKey = 'example-flow';
@@ -196,7 +206,7 @@ export const DnDFlower = () => {
         setIsModal({
             open: true,
             type: 'upload',
-            data: Dagger
+            data: changedDager
         });
     };
 

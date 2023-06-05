@@ -16,7 +16,7 @@ function NodeCreator(props: any) {
                 if (node.id === id) {
                     node.data = {
                         ...node.data,
-                        userInput: evt.target.value
+                        label: evt.target.value
                     };
                 }
                 return node;

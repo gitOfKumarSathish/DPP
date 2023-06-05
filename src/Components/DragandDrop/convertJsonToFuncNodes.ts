@@ -1,5 +1,7 @@
 export function convertJsonToFuncNodes(jsonData: any) {
     const { edges, nodes } = jsonData;
+    console.log('nodes', nodes);
+    console.log('edges', edges);
     let funcNodes = nodes.filter((node: { type: string; }) => node.type === "custom");
     let varNodes = nodes.filter((node: { type: string; }) => node.type !== "custom");
     let mapping: any[] = [];
@@ -10,33 +12,40 @@ export function convertJsonToFuncNodes(jsonData: any) {
     }) => {
         let eachFuncNode: any = {};
         eachFuncNode['name'] = node.id;
-        eachFuncNode['func_label'] = node.data.userInput || node.data.label;
+        eachFuncNode['func_label'] = node.data.label;
         let bindObject = {};
         edges.map((edge: { id: string | any[]; target: any; source: any; }) => {
-            if (edge.id.includes(node.id) && edge.target === node.id) {
+            const edgerIds = (edge.id?.split("+"));
+            if ((edgerIds[0].trim() === (node.id) || (edgerIds[1].trim() === (node.id)) && edge.target === node.id)) {
                 varNodes.map((varNode: {
                     id: string | any[]; data: {
                         label: any; userInput: any;
                     };
                 }) => {
-                    if (varNode.id.includes(edge.source)) {
-                        if (varNode.data.userInput) {
-                            Object.assign(bindObject, { [varNode.data.userInput]: varNode.data.userInput });
-                        } else {
-                            Object.assign(bindObject, { [varNode.data.label]: varNode.data.label });
-                        }
+
+                    console.log('bindObject', bindObject);
+                    if (varNode.id === (edge.source)) {
+                        console.log('varNode.id', varNode);
+                        console.log('edge', edge);
+                        // if (varNode.data.userInput) {
+                        //     console.log('varNode.data.userInput', varNode.data);
+                        //     Object.assign(bindObject, { [varNode.data?.userInput]: varNode.data.userInput });
+                        // }
+                        // if (varNode.data.label) {
+                        Object.assign(bindObject, { [varNode.data.label]: varNode.data.label });
+                        // }
                     }
                 });
             }
             eachFuncNode['bind'] = bindObject;
-            if (edge.id.includes(node.id) && edge.source === node.id) {
+            if ((edgerIds[0].trim() === (node.id) || (edgerIds[1].trim() === (node.id)) && edge.source === node.id)) {
                 varNodes.map((varNode: {
                     id: string | any[]; data: {
                         label: any; userInput: any;
                     };
                 }) => {
-                    if (varNode.id.includes(edge.target)) {
-                        eachFuncNode['out'] = varNode.data.userInput || varNode.data.label;
+                    if (varNode.id === (edge.target)) {
+                        eachFuncNode['out'] = varNode.data.label;
                     }
                 });
             }
