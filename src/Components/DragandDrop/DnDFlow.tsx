@@ -124,7 +124,6 @@ export const DnDFlower = () => {
     // };
 
     const handleUpload = useCallback((data) => {
-        setUploadOver(false);
         const funcToJsonNode: any = convertFuncNodeToJsonNode(data);
         const funcToJsonEdge: any = convertFuncNodeToJsonEdge(data);
         setNodes(funcToJsonNode);
@@ -203,6 +202,7 @@ export const DnDFlower = () => {
     };
 
     const uploadHandler = () => {
+        setUploadOver(false);
         setIsModal({
             open: true,
             type: 'upload',
