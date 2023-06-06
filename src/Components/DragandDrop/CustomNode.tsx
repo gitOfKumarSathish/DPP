@@ -25,7 +25,7 @@ const options = [
   }
 ];
 
-function Select({ value, handleId, nodeId, sourcePosition }: any) {
+function Select({ value, handleId, nodeId, sourcePosition, data }: any) {
   const { setNodes } = useReactFlow();
   const store = useStoreApi();
   const [customValue, setCustomValue] = useState();
@@ -79,9 +79,8 @@ function Select({ value, handleId, nodeId, sourcePosition }: any) {
         <input id="text" name="text"
           onChange={labelNameChange}
           className="titleBox" />}
-
-      <Handle type="target" position={sourcePosition === "right" ? Position.Top : Position.Left} id={handleId} />
-      <Handle type="source" position={sourcePosition === "right" ? Position.Bottom : Position.Right} id={handleId} />
+      <Handle type="target" position={data?.initialEdge === 'right' || sourcePosition === "right" ? Position.Top : Position.Left} id={handleId} />
+      <Handle type="source" position={data?.initialEdge === 'right' || sourcePosition === "right" ? Position.Bottom : Position.Right} id={handleId} />
     </div>
   );
 }
@@ -91,7 +90,7 @@ function CustomNode({ id, data, type, sourcePosition }: any) {
     <section className={`text-updater-node ${type}`}>
       <h4 className={`nodeTitle ${type}`}>func_node</h4>
       <div className={`flexProps ${type}`}>
-        <Select nodeId={id} value={data.ddType === 'new' ? data.ddType : data.label} handleId={data.label} sourcePosition={sourcePosition} />
+        <Select nodeId={id} value={data.ddType === 'new' ? data.ddType : data.label} handleId={data.label} sourcePosition={sourcePosition} data={data} />
       </div>
 
     </section>
