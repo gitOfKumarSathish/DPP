@@ -158,6 +158,7 @@ input#text:focus-visible {
 .nodeTitle {
   margin: -1px;
   padding: 2%;
+  color: #fff;
 }
 
 .nodeTitle.funcNode {
