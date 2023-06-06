@@ -189,7 +189,9 @@ export const DnDFlow = () => {
             };
             if (type === 'custom') {
                 newNode.data = {
-                    label: 'Add', selects: {
+                    label: 'Add',
+                    ddType: 'Add',
+                    selects: {
                         [nodeTypeId]: 'Add',
                     },
                 };
