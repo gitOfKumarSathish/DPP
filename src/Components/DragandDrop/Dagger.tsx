@@ -83,10 +83,7 @@ const nodeTypes = {
     custom: (props: any) => <CustomNode {...props} type='funcNode' />,
 };
 export const DnDFlow = () => {
-    // const nodeTypes = useMemo(() => ({
-    //     custom: (props: any) => <NodeCreator {...props} type='funcNode' />,
-    //     textUpdater: (props: any) => <NodeCreator {...props} type='varNode' />,
-    // }), []);
+
 
     const reactFlowWrapper = useRef(null);
     const [nodes, setNodes, onNodesChange] = useNodesState([]);
@@ -104,7 +101,6 @@ export const DnDFlow = () => {
                 edges,
                 direction
             );
-
             setNodes([...layoutedNodes]);
             setEdges([...layoutedEdges]);
         },
@@ -112,9 +108,13 @@ export const DnDFlow = () => {
     );
 
     useEffect(() => {
-        console.log('object');
         onLayout('TB'); // Set vertical layout on component load
     }, [uploadOver]);
+
+    // const nodeTypes = useMemo(() => ({
+    //     custom: (props: any) => <NodeCreator {...props} type='funcNode' />,
+    //     textUpdater: (props: any) => <NodeCreator {...props} type='varNode'  />,
+    // }), []);
 
     // const handleUpload = (data: any) => {
     //     const funcToJsonNode: any = convertFuncNodeToJsonNode(data);
@@ -263,10 +263,10 @@ export const DnDFlow = () => {
                             <button onClick={uploadHandler} className='panelBtn'>Upload</button>
                         </Panel>
 
-                        {/* <Panel position="top-left">
+                        <Panel position="top-left">
                             <button onClick={() => onLayout('TB')}>vertical layout</button>
                             <button onClick={() => onLayout('LR')}>horizontal layout</button>
-                        </Panel> */}
+                        </Panel>
                     </ReactFlow>
                 </div>
 

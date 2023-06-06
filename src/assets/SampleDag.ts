@@ -134,6 +134,7 @@ export const dd_dager = {
             "name": "function_148",
             "func_label": "Subtract",
             "bind": {
+                "fn": "fn",
                 "fn_cost_p_unit": "fn_cost_p_unit"
             },
             "out": "fncost"

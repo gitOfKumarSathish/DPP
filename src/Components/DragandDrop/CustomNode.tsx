@@ -20,7 +20,7 @@ const options = [
   }
 ];
 
-function Select({ value, handleId, nodeId }: any) {
+function Select({ value, handleId, nodeId, sourcePosition }: any) {
   const { setNodes } = useReactFlow();
   const store = useStoreApi();
 
@@ -46,7 +46,6 @@ function Select({ value, handleId, nodeId }: any) {
 
   return (
     <div className="custom-node__select">
-      {/* <div>Edge Type</div> */}
       <select className="nodrag titleBox" onChange={onChange} value={value}>
         {options.map((option) => (
           <option key={option.value} value={option.value}>
@@ -54,20 +53,19 @@ function Select({ value, handleId, nodeId }: any) {
           </option>
         ))}
       </select>
-      <Handle type="target" position={Position.Top} id={handleId} />
-      <Handle type="source" position={Position.Bottom} id={handleId} />
+
+      <Handle type="target" position={sourcePosition === "right" ? Position.Top : Position.Left} id={handleId} />
+      <Handle type="source" position={sourcePosition === "right" ? Position.Bottom : Position.Right} id={handleId} />
     </div>
   );
 }
 
-function CustomNode({ id, data, type }: any) {
+function CustomNode({ id, data, type, sourcePosition }: any) {
   return (
     <section className={`text-updater-node ${type}`}>
       <h4 className={`nodeTitle ${type}`}>func_node</h4>
       <div className={`flexProps ${type}`}>
-        {console.log('data', data)}
-        {/* {data.selects = data.label} */}
-        <Select nodeId={id} value={data.label} handleId={data.label} />
+        <Select nodeId={id} value={data.label} handleId={data.label} sourcePosition={sourcePosition} />
         {/* {Object.keys(data.selects).map((handleId, i) => (
           <>
             <Select key={i} nodeId={id} value={data.selects[handleId]} handleId={handleId} />

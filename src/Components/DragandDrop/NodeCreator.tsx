@@ -2,7 +2,8 @@ import React, { useCallback, memo, useState, useEffect } from 'react';
 import { Handle, useReactFlow, Position, useStoreApi } from 'reactflow';
 
 function NodeCreator(props: any) {
-    const { id, isConnectable, type } = props;
+    console.log('props', props);
+    const { id, isConnectable, type, sourcePosition } = props;
     const [valueText, setValueText] = useState(props.data.label);
     const [nodeType, setNodeType] = useState({ title: 'func_node', label: 'func_label', placeHolder: 'function name' });
     const { setNodes } = useReactFlow();
@@ -30,16 +31,16 @@ function NodeCreator(props: any) {
         }
     }, [props.type]);
 
-
+    { console.log('layout nide creator', sourcePosition); }
     return (
         <div className="text-updater-node">
             <h4 className={`nodeTitle ${type}`}>{nodeType.title}</h4>
-            <Handle type="target" position={Position.Top} isConnectable={isConnectable} />
+            <Handle type="target" position={sourcePosition === "right" ? Position.Top : Position.Left} isConnectable={isConnectable} />
             <div className={`flexProps ${type}`}>
                 <label htmlFor="text">{nodeType.label}:</label>
                 <input id="text" name="text" onChange={labelNameChange} className="titleBox" placeholder={nodeType.placeHolder} value={valueText} />
             </div>
-            <Handle type="source" position={Position.Bottom} isConnectable={isConnectable} />
+            <Handle type="source" position={sourcePosition === "right" ? Position.Bottom : Position.Right} isConnectable={isConnectable} />
         </div>
     );
 }
