@@ -264,7 +264,7 @@ export const DnDFlow = () => {
                         </Panel>
 
                         <Panel position="top-left">
-                            <button onClick={() => onLayout('TB')}>vertical layout</button>
+                            <button onClick={() => onLayout('TB')} className='saveBtn'>vertical layout</button>
                             <button onClick={() => onLayout('LR')}>horizontal layout</button>
                         </Panel>
                     </ReactFlow>
