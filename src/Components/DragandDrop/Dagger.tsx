@@ -265,10 +265,10 @@ export const DnDFlow = () => {
                             <button onClick={uploadHandler} className='panelBtn'>Upload</button>
                         </Panel>
 
-                        <Panel position="top-left">
+                        {/* <Panel position="top-left">
                             <button onClick={() => onLayout('TB')} className='saveBtn'>vertical layout</button>
                             <button onClick={() => onLayout('LR')}>horizontal layout</button>
-                        </Panel>
+                        </Panel> */}
                     </ReactFlow>
                 </div>
 
