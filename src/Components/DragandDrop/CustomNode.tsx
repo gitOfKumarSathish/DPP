@@ -31,6 +31,7 @@ function Select({ value, handleId, nodeId }: any) {
         if (node.id === nodeId) {
           node.data = {
             ...node.data,
+            label: evt.target.value,
             selects: {
               ...node.data.selects,
               [handleId]: evt.target.value,
@@ -46,7 +47,7 @@ function Select({ value, handleId, nodeId }: any) {
   return (
     <div className="custom-node__select">
       {/* <div>Edge Type</div> */}
-      <select className="nodrag" onChange={onChange} value={value}>
+      <select className="nodrag titleBox" onChange={onChange} value={value}>
         {options.map((option) => (
           <option key={option.value} value={option.value}>
             {option.label}
@@ -59,18 +60,19 @@ function Select({ value, handleId, nodeId }: any) {
   );
 }
 
-function CustomNode({ id, data }: any) {
+function CustomNode({ id, data, type }: any) {
   return (
-    <section className='dropdownArea'>
-      <div className="custom-node__header">
-        Function Type
-      </div>
-      <div className="custom-node__body">
-        {Object.keys(data.selects).map((handleId, i) => (
+    <section className={`text-updater-node ${type}`}>
+      <h4 className={`nodeTitle ${type}`}>func_node</h4>
+      <div className={`flexProps ${type}`}>
+        {console.log('data', data)}
+        {/* {data.selects = data.label} */}
+        <Select nodeId={id} value={data.label} handleId={data.label} />
+        {/* {Object.keys(data.selects).map((handleId, i) => (
           <>
             <Select key={i} nodeId={id} value={data.selects[handleId]} handleId={handleId} />
           </>
-        ))}
+        ))} */}
       </div>
     </section>
   );

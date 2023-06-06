@@ -122,14 +122,12 @@
 }
 
 .custom-node__select {
-  /* position: relative; */
-  margin-bottom: 10px;
+  /* margin: 5px; */
+  width: 90%;
 }
 
 .custom-node__select select {
   width: 90%;
-  margin-top: 5px;
-  font-size: 10px;
 }
 
 .custom-node__header {
@@ -196,6 +194,7 @@ h4.nodeTitle.varNode {
 
 .text-updater-node {
   overflow: hidden;
+  width: 200px;
 }
 
 .ModalBox {

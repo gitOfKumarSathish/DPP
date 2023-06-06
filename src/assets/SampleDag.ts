@@ -98,4 +98,54 @@ export const changedDager = {
             "out": "total_cost"
         }
     ]
-}; 
+};
+
+export const dd_dager = {
+    "name": "dag",
+    "func_nodes": [
+        {
+            "name": "function_873",
+            "func_label": "Multiple",
+            "bind": {
+                "fpr": "fpr",
+                "n": "n"
+            },
+            "out": "fp_cost_p_unit"
+        },
+        {
+            "name": "function_235",
+            "func_label": "Multiple",
+            "bind": {
+                "n": "n",
+                "fnr": "fnr"
+            },
+            "out": "fn_cost_p_unit"
+        },
+        {
+            "name": "function_33",
+            "func_label": "Subtract",
+            "bind": {
+                "fp_cost_p_unit": "fp_cost_p_unit",
+                "fp": "fp"
+            },
+            "out": "fpcost"
+        },
+        {
+            "name": "function_148",
+            "func_label": "Subtract",
+            "bind": {
+                "fn_cost_p_unit": "fn_cost_p_unit"
+            },
+            "out": "fncost"
+        },
+        {
+            "name": "function_434",
+            "func_label": "Add",
+            "bind": {
+                "fpcost": "fpcost",
+                "fncost": "fncost"
+            },
+            "out": "total_cost"
+        }
+    ]
+};

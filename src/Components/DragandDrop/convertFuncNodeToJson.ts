@@ -12,7 +12,8 @@ export function convertFuncNodeToJsonNode(jsonData: any) {
             id: funcNode.name,
             type: 'custom',
             data: {
-                label: funcNode.func_label
+                label: funcNode.func_label,
+                selects: funcNode.func_label
             },
             position: { x: randomPosition(), y: randomPosition() },
             // position: { x: 0, y: 0 },

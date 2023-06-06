@@ -21,7 +21,8 @@ import { convertJsonToFuncNodes } from './convertJsonToFuncNodes';
 import { convertFuncNodeToJsonEdge, convertFuncNodeToJsonNode } from './convertFuncNodeToJson';
 import NodeCreator from './NodeCreator';
 import UploadDownload from './UploadDownload';
-import { Dagger, changedDager } from '../../assets/SampleDag';
+import { Dagger, changedDager, dd_dager } from '../../assets/SampleDag';
+import CustomNode from './CustomNode';
 
 
 const dagreGraph = new dagre.graphlib.Graph();
@@ -77,8 +78,9 @@ const initialNodes = [
 
 const getId = (type: string) => `${(type === 'input' || type === 'textUpdater') ? 'variable_' + Math.floor(Math.random() * 1000) : 'function_' + Math.floor(Math.random() * 1000)}`;
 const nodeTypes = {
-    custom: (props: any) => <NodeCreator {...props} type='funcNode' />,
+    // custom: (props: any) => <NodeCreator {...props} type='funcNode' />,
     textUpdater: (props: any) => <NodeCreator {...props} type='varNode' />,
+    custom: (props: any) => <CustomNode {...props} type='funcNode' />,
 };
 export const DnDFlow = () => {
     // const nodeTypes = useMemo(() => ({
@@ -185,6 +187,14 @@ export const DnDFlow = () => {
                 position,
                 data: { label: '' },
             };
+            if (type === 'custom') {
+                newNode.data = {
+                    label: 'Add', selects: {
+                        [nodeTypeId]: 'Add',
+                    },
+                };
+            }
+            console.log('newNode', newNode);
             setNodes((nds) => nds.concat(newNode));
         },
         [reactFlowInstance]
@@ -205,7 +215,7 @@ export const DnDFlow = () => {
         setIsModal({
             open: true,
             type: 'upload',
-            data: changedDager
+            data: dd_dager
         });
     };
 
@@ -267,9 +277,6 @@ export const DnDFlow = () => {
                     <UploadDownload onClose={closeModal} type={isModal?.type} data={isModal?.data} onDataUploaded={handleUpload} />
                 </div>
             )}
-
-
-
         </div>
 
     );
