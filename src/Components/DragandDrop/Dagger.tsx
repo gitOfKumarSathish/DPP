@@ -270,7 +270,7 @@ export const DnDFlow = () => {
                         <Controls />
                         <Panel position="top-right">
                             <button onClick={onSave} className='saveBtn panelBtn'>save</button>
-                            <button onClick={uploadHandler} className='panelBtn'>Upload</button>
+                            <button onClick={uploadHandler} className='panelBtn'>load</button>
                         </Panel>
 
                         <Panel position="top-left">

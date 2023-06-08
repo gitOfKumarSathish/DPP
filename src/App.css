@@ -182,6 +182,16 @@ h4.nodeTitle.varNode {
   font-size: 12px;
   background: #1f2937;
   color: #fff;
+  flex-direction: column;
+}
+
+.inputStyler {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  background: #1f2937;
+  color: #fff;
 }
 
 .flexProps.varNode {
@@ -266,4 +276,9 @@ button.saveBtn {
 button.panelBtn {
   width: 35%;
   text-align: center;
+}
+
+.invalidMsg {
+  font-size: 12px;
+  color: orangered;
 }

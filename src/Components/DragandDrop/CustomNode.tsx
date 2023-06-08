@@ -1,5 +1,6 @@
 import React, { memo, useCallback, useState } from 'react';
 import { Handle, useReactFlow, useStoreApi, Position } from 'reactflow';
+import { pythonIdentifierPattern } from '../Utilities/globalFunction';
 
 const options = [
 
@@ -29,6 +30,8 @@ function Select({ value, handleId, nodeId, sourcePosition, data }: any) {
   const { setNodes } = useReactFlow();
   const store = useStoreApi();
   const [customValue, setCustomValue] = useState();
+  const [valueText, setValueText] = useState('');
+  const [validationMsg, setValidationMsg] = useState(false);
 
   const onChange = (evt: { target: { value: any; }; }) => {
     const { nodeInternals } = store.getState();
@@ -53,17 +56,25 @@ function Select({ value, handleId, nodeId, sourcePosition, data }: any) {
 
   const labelNameChange = useCallback((evt: { target: { value: any; }; }) => {
     const { nodeInternals } = store.getState();
-    setNodes(
-      Array.from(nodeInternals.values()).map((node: any) => {
-        if (node.id === nodeId) {
-          node.data = {
-            ...node.data,
-            label: evt.target.value
-          };
-        }
-        return node;
-      })
-    );
+    const inputValue = evt.target.value;
+    if (pythonIdentifierPattern.test(inputValue)) {
+      setValueText(inputValue);
+      setValidationMsg(false);
+      setNodes(
+        Array.from(nodeInternals.values()).map((node: any) => {
+          if (node.id === nodeId) {
+            node.data = {
+              ...node.data,
+              label: inputValue
+            };
+          }
+          return node;
+        })
+      );
+    } else {
+      console.log("Invalid identifier");
+      setValidationMsg(true);
+    }
   }, []);
 
   return (
@@ -76,9 +87,18 @@ function Select({ value, handleId, nodeId, sourcePosition, data }: any) {
         ))}
       </select>
       {(customValue === 'new') &&
-        <input id="text" name="text"
-          onChange={labelNameChange}
-          className="titleBox" />}
+        <>
+          {console.log('valueText', valueText)}
+          <input id="text" name="text"
+            onChange={labelNameChange}
+            className="titleBox"
+            value={valueText}
+            placeholder='function Name'
+            pattern={pythonIdentifierPattern.toString()}
+          />
+          {validationMsg && <span className='invalidMsg'>Invalid Entry</span>}
+        </>
+      }
       <Handle type="target" position={data?.initialEdge === 'right' || sourcePosition === "right" ? Position.Top : Position.Left} id={handleId} />
       <Handle type="source" position={data?.initialEdge === 'right' || sourcePosition === "right" ? Position.Bottom : Position.Right} id={handleId} />
     </div>
