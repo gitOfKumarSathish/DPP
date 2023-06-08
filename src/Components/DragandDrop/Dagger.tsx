@@ -33,7 +33,6 @@ const nodeHeight = 75;
 
 const getLayoutedElements = (nodes: any[], edges: any[], direction = 'TB') => {
     const isHorizontal = direction === 'TB';
-    console.log('direction', direction);
     dagreGraph.setGraph({ rankdir: direction });
 
     nodes.forEach((node: { id: any; }) => {
@@ -64,18 +63,6 @@ const getLayoutedElements = (nodes: any[], edges: any[], direction = 'TB') => {
     return { nodes, edges };
 };
 
-
-
-const initialNodes = [
-    {
-        id: '1',
-        type: 'input',
-        data: { label: 'input node' },
-        position: { x: 250, y: 5 },
-    },
-];
-
-
 const getId = (type: string) => `${(type === 'input' || type === 'textUpdater') ? 'variable_' + Math.floor(Math.random() * 1000) : 'function_' + Math.floor(Math.random() * 1000)}`;
 const nodeTypes = {
     // custom: (props: any) => <NodeCreator {...props} type='funcNode' />,
@@ -92,7 +79,26 @@ export const DnDFlow = () => {
     const [isModal, setIsModal] = useState({ open: false, type: 'upload', data: {} });
     const [uploadOver, setUploadOver] = useState(false);
 
-    const onConnect = useCallback((params: Edge | Connection) => setEdges((eds) => addEdge(params, eds)), []);
+    // const onConnect = useCallback((params: Edge | Connection) => setEdges((eds) => addEdge(params, eds)), []);
+
+    const onConnect = useCallback((params: Edge | Connection) => {
+        const { source, target } = params;
+
+        // Check if the source node already has an outgoing edge
+        const existingEdge = edges.find((edge) => edge.source === source);
+
+        if (existingEdge) {
+            // An outgoing edge already exists, so prevent creating a new connection
+            return;
+        }
+        const newEdge = {
+            ...params,
+            type: 'smoothstep',
+            animated: true,
+        };
+        // No outgoing edge exists, create the new connection
+        setEdges((prevEdges) => addEdge(newEdge, prevEdges));
+    }, [edges]);
 
     const onLayout = useCallback(
         (direction: string | undefined) => {
@@ -124,7 +130,7 @@ export const DnDFlow = () => {
     //     setUploadOver(true);
     // };
 
-    const handleUpload = useCallback((data) => {
+    const handleUpload = useCallback((data: any) => {
         const funcToJsonNode: any = convertFuncNodeToJsonNode(data);
         const funcToJsonEdge: any = convertFuncNodeToJsonEdge(data);
         setNodes(funcToJsonNode);
@@ -198,7 +204,6 @@ export const DnDFlow = () => {
                     },
                 };
             }
-            console.log('newNode', newNode);
             setNodes((nds) => nds.concat(newNode));
         },
         [reactFlowInstance]
@@ -211,7 +216,8 @@ export const DnDFlow = () => {
         const { source, target } = connection;
         const sourceValid = nodes.find((node) => node.id === source)?.type;
         const targetValid = nodes.find((node) => node.id === target)?.type;
-        return sourceValid !== 'custom' || targetValid !== 'custom';
+        return sourceValid !== targetValid;
+        // return sourceValid !== 'custom' || targetValid !== 'custom';
     };
 
     const uploadHandler = () => {

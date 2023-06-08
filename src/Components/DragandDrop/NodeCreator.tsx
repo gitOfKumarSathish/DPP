@@ -2,7 +2,6 @@ import React, { useCallback, memo, useState, useEffect } from 'react';
 import { Handle, useReactFlow, Position, useStoreApi } from 'reactflow';
 
 function NodeCreator(props: any) {
-    console.log('props', props);
     const { id, isConnectable, type, sourcePosition, data } = props;
     const [valueText, setValueText] = useState(props.data.label);
     const [nodeType, setNodeType] = useState({ title: 'func_node', label: 'func_label', placeHolder: 'function name' });
@@ -31,7 +30,6 @@ function NodeCreator(props: any) {
         }
     }, [props.type]);
 
-    { console.log('layout nide creator', sourcePosition); }
     return (
         <div className="text-updater-node">
             <h4 className={`nodeTitle ${type}`}>{nodeType.title}</h4>
