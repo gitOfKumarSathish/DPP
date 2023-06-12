@@ -15,8 +15,25 @@ function Load(props: {
         setData(event.target.value);
     };
 
+
+    // const mutation = useMutation({
+    //     mutationFn: (newTodo: any) => {
+    //         const url = 'https://dagger.free.beeceptor.com/' + newTodo;
+    //         return axios.get(url);
+    //     },
+    //     onSuccess: (data, variables, context) => {
+    //         // I will fire first
+    //         console.log({ data, variables, context });
+    //         console.log('{data}', data.data);
+    //         props.onDataUploaded(data.data);
+    //         onClose();
+    //     },
+    // });
+
+
     const handleDagSubmit = async (event: { preventDefault: () => void; }) => {
         event.preventDefault();
+        // mutation.mutate(selectDag);
         API.loadDag(selectDag).then(x => {
             console.log('object', x);
             props.onDataUploaded(x);
