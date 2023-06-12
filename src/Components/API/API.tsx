@@ -22,7 +22,6 @@ function GetQueryMethod(url: string, key: string) {
 }
 
 const GetNormalMethod = async (url: any) => {
-    // Perform your data fetching logic based on the selected value
     const response = await fetch(url);
     const data = await response.json();
     return data;
@@ -34,6 +33,11 @@ async function PostMethod(url: string, data: any, path = '') {
     const resp = await axios.post(url, data);
     return resp.data;
 }
+
+
+
+
+
 
 export function getFuncNodes() {
     let url = ApiUrl.getFuncNodes;

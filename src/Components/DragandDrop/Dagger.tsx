@@ -20,9 +20,9 @@ import Sidebar from './Sidebar';
 import { convertJsonToFuncNodes } from './convertJsonToFuncNodes';
 import { convertFuncNodeToJsonEdge, convertFuncNodeToJsonNode } from './convertFuncNodeToJson';
 import NodeCreator from './NodeCreator';
-import UploadDownload from './UploadDownload';
 import { Dagger, changedDager, dd_dager } from '../../assets/SampleDag';
 import CustomNode from './CustomNode';
+import SaveAndLoad from './SaveAndLoad';
 
 
 const dagreGraph = new dagre.graphlib.Graph();
@@ -223,9 +223,9 @@ export const DnDFlow = () => {
     const uploadHandler = () => {
         setUploadOver(false);
         setIsModal({
+            ...isModal,
             open: true,
             type: 'upload',
-            data: dd_dager
         });
     };
 
@@ -284,7 +284,7 @@ export const DnDFlow = () => {
 
             {isModal?.open && (
                 <div className='overlayPosition'>
-                    <UploadDownload onClose={closeModal} type={isModal?.type} data={isModal?.data} onDataUploaded={handleUpload} />
+                    <SaveAndLoad onClose={closeModal} type={isModal?.type} data={isModal?.data} onDataUploaded={handleUpload} />
                 </div>
             )}
         </div>

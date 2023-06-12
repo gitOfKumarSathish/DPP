@@ -1,8 +1,8 @@
 import React, { useState, memo, useEffect } from 'react';
 import CopyIcon from './../../assets/images/files.png';
-import * as API from './../API/API';
+import * as API from '../API/API';
 
-function UploadDownload(props: {
+function SaveAndLoad(props: {
     onDataUploaded(parsedData: any): unknown; data?: any; type?: any; onClose?: any;
 }) {
     const { onClose } = props;
@@ -155,4 +155,4 @@ function UploadDownload(props: {
     );
 }
 
-export default memo(UploadDownload);
+export default memo(SaveAndLoad);
