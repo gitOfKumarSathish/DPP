@@ -11,7 +11,9 @@
   },
   "dependencies": {
     "@reactflow/core": "^11.7.2",
+    "@tanstack/react-query": "^4.29.12",
     "@typeform/embed-react": "^2.21.0",
+    "axios": "^1.4.0",
     "dagre": "^0.8.5",
     "dagre-d3-react": "^0.2.4",
     "react": "^18.2.0",

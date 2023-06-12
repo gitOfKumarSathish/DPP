@@ -1,5 +1,6 @@
 import React, { useState, memo } from 'react';
 import CopyIcon from './../../assets/images/files.png';
+import * as API from './../API/API';
 
 function UploadDownload(props: {
     onDataUploaded(parsedData: any): unknown; data?: any; type?: any; onClose?: any;
@@ -50,6 +51,10 @@ function UploadDownload(props: {
         };
         console.log('object submit', combinedObj);
         onClose();
+
+        API.saveDag(combinedObj).then(x => {
+            console.log('x', x);
+        }).catch(err => console.log('error', err.message));
     };
 
     const loadDag = (e: { target: { value: string; }; }) => {
@@ -57,6 +62,8 @@ function UploadDownload(props: {
         onClose();
     };
 
+    const resp = API.getDagList();
+    console.log('resp', resp.data);
 
     return (
         <div className='ModalBox'>
@@ -68,10 +75,13 @@ function UploadDownload(props: {
                             <label htmlFor="dagList">Choose your Dag:</label>
                             <select name="dagList" id="dagList" defaultValue="" onChange={loadDag}>
                                 <option disabled value="">Select a Dag</option>
-                                <option value="volvo">Volvo</option>
-                                <option value="saab">Saab</option>
-                                <option value="mercedes">Mercedes</option>
-                                <option value="audi">Audi</option>
+                                {
+                                    resp?.data?.map((option: { value: string, label: string; }) => (
+                                        <option key={option?.value} value={option?.value}>
+                                            {option?.label}
+                                        </option>
+                                    ))
+                                }
                             </select>
                         </div>
                     }

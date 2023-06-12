@@ -1,32 +1,9 @@
-import React, { memo, useCallback, useState } from 'react';
+import React, { memo, useCallback, useEffect, useState } from 'react';
 import { Handle, useReactFlow, useStoreApi, Position } from 'reactflow';
 import { pythonIdentifierPattern } from '../Utilities/globalFunction';
+import * as API from './../API/API';
 
-const options = [
-
-  {
-    value: 'Add',
-    label: 'Add',
-  },
-  {
-    value: 'Multiple',
-    label: 'Multiple',
-  },
-  {
-    value: 'Subtract',
-    label: 'Subtract',
-  },
-  {
-    value: 'Divide',
-    label: 'Divide',
-  },
-  {
-    value: 'new',
-    label: 'New Function',
-  }
-];
-
-function Select({ value, handleId, nodeId, sourcePosition, data }: any) {
+function Select({ value, handleId, nodeId, sourcePosition, data, selector }: any) {
   const { setNodes } = useReactFlow();
   const store = useStoreApi();
   const [customValue, setCustomValue] = useState();
@@ -80,11 +57,13 @@ function Select({ value, handleId, nodeId, sourcePosition, data }: any) {
   return (
     <div className="custom-node__select">
       <select className="nodrag titleBox" onChange={onChange} value={value}>
-        {options.map((option) => (
-          <option key={option.value} value={option.value}>
-            {option.label}
-          </option>
-        ))}
+        {
+          selector?.map((option: { value: string, label: string; }) => (
+            <option key={option?.value} value={option?.value}>
+              {option?.label}
+            </option>
+          ))
+        }
       </select>
       {(customValue === 'new') &&
         <>
@@ -106,11 +85,13 @@ function Select({ value, handleId, nodeId, sourcePosition, data }: any) {
 }
 
 function CustomNode({ id, data, type, sourcePosition }: any) {
+
+  const resp = API.getFuncNodes();
   return (
     <section className={`text-updater-node ${type}`}>
       <h4 className={`nodeTitle ${type}`}>func_node</h4>
       <div className={`flexProps ${type}`}>
-        <Select nodeId={id} value={data.ddType === 'new' ? data.ddType : data.label} handleId={data.label} sourcePosition={sourcePosition} data={data} />
+        <Select nodeId={id} value={data.ddType === 'new' ? data.ddType : data.label} handleId={data.label} sourcePosition={sourcePosition} data={data} selector={resp.data} />
       </div>
 
     </section>
