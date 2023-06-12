@@ -143,7 +143,7 @@ export const DnDFlow = () => {
         if (reactFlowInstance) {
             const flow = reactFlowInstance.toObject();
             let MappedJson = {
-                "name": "dag",
+                // "name": "dag",
                 func_nodes: convertJsonToFuncNodes(flow)
             };
 

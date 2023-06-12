@@ -282,3 +282,30 @@ button.panelBtn {
   font-size: 12px;
   color: orangered;
 }
+
+.dagNameBox {
+  border: 1px solid #ccc;
+  margin: 2% 0;
+  width: 80%;
+  padding: 3%;
+  border-radius: 5px;
+}
+
+.copyBtn {
+  position: absolute;
+  right: 22px;
+  top: 146px;
+  width: 6%;
+  cursor: pointer;
+}
+
+.jsonData {
+  position: relative;
+}
+
+.dagNameSection {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0 2%;
+}
