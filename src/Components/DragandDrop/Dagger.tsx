@@ -22,7 +22,8 @@ import { convertFuncNodeToJsonEdge, convertFuncNodeToJsonNode } from './convertF
 import NodeCreator from './NodeCreator';
 import { Dagger, changedDager, dd_dager } from '../../assets/SampleDag';
 import CustomNode from './CustomNode';
-import SaveAndLoad from './SaveAndLoad';
+import Load from './Load';
+import Save from './Save';
 
 
 const dagreGraph = new dagre.graphlib.Graph();
@@ -143,7 +144,6 @@ export const DnDFlow = () => {
         if (reactFlowInstance) {
             const flow = reactFlowInstance.toObject();
             let MappedJson = {
-                // "name": "dag",
                 func_nodes: convertJsonToFuncNodes(flow)
             };
 
@@ -261,7 +261,6 @@ export const DnDFlow = () => {
                         fitView
                         nodeTypes={nodeTypes}
                     >
-                        {/* <Background color="#ccc" variant={BackgroundVariant.Dots} /> */}
                         <Background
                             variant={BackgroundVariant.Lines}
                             color="#2a2b2d"
@@ -282,11 +281,16 @@ export const DnDFlow = () => {
 
             </ReactFlowProvider>
 
-            {isModal?.open && (
+            {(isModal?.open && isModal?.type === 'upload') && (
                 <div className='overlayPosition'>
-                    <SaveAndLoad onClose={closeModal} type={isModal?.type} data={isModal?.data} onDataUploaded={handleUpload} />
+                    <Load onClose={closeModal} type={isModal?.type} data={isModal?.data} onDataUploaded={handleUpload} />
                 </div>
             )}
+            {(isModal?.open && isModal?.type !== 'upload') && (
+                <div className='overlayPosition'>
+                    <Save onClose={closeModal} type={isModal?.type} data={isModal?.data} onDataUploaded={handleUpload} />
+                </div>)
+            }
         </div>
 
     );
