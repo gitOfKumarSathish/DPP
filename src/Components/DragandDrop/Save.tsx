@@ -1,6 +1,7 @@
 import React, { useState, memo, useEffect } from 'react';
 import CopyIcon from './../../assets/images/files.png';
 import * as API from '../API/API';
+import { pythonIdentifierPattern } from '../Utilities/globalFunction';
 
 function Save(props: {
     onDataUploaded(parsedData: any): unknown; data?: any; type?: any; onClose?: any;
@@ -17,8 +18,11 @@ function Save(props: {
         setCopied(true);
     };
 
-    const dagNameHandler = (event: { target: { value: React.SetStateAction<string>; }; }) => {
-        setDagName(event.target.value);
+    const dagNameHandler = (event: { target: { value: string; }; }) => {
+        const inputValue = event.target.value;
+        if (pythonIdentifierPattern.test(inputValue)) {
+            setDagName(inputValue);
+        }
     };
 
 
@@ -44,7 +48,7 @@ function Save(props: {
                 <h3 className='ModalTitle'>Copy Your JSON</h3>
                 <div className='dagNameSection'>
                     <label htmlFor="text">Name:</label>
-                    <input id="text" name="text" className="dagNameBox" placeholder='Name of DAG' required onChange={dagNameHandler} />
+                    <input id="text" name="text" className="dagNameBox" placeholder='Name of DAG' required onChange={dagNameHandler} value={dagName} />
                 </div>
                 {<img onClick={handleCopy} src={CopyIcon} alt='copyBtn' className='copyBtn' title={copied ? 'Copied!' : 'Copy'} />}
                 <textarea
