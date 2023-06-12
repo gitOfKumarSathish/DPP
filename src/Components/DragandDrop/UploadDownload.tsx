@@ -1,4 +1,4 @@
-import React, { useState, memo } from 'react';
+import React, { useState, memo, useEffect } from 'react';
 import CopyIcon from './../../assets/images/files.png';
 import * as API from './../API/API';
 
@@ -11,6 +11,8 @@ function UploadDownload(props: {
     const [openEditor, setOpenEditor] = useState(false);
     const [dagName, setDagName] = useState('');
     const [errorExist, setErrorExist] = useState(false);
+    const [selectDag, setSelectDag] = useState('');
+    const [showErrorMessage, setShowErrorMessage] = useState(false);
 
     const handleChange = (event: { target: { value: React.SetStateAction<string>; }; }) => {
         setData(event.target.value);
@@ -49,7 +51,6 @@ function UploadDownload(props: {
             dagName,
             ...props.data,
         };
-        console.log('object submit', combinedObj);
         onClose();
 
         API.saveDag(combinedObj).then(x => {
@@ -57,9 +58,23 @@ function UploadDownload(props: {
         }).catch(err => console.log('error', err.message));
     };
 
-    const loadDag = (e: { target: { value: string; }; }) => {
+    const loadDag = async (e: { target: { value: string; }; }) => {
         console.log('e', e.target.value);
-        onClose();
+        setSelectDag(e.target.value);
+    };
+
+    const handleDagSubmit = async (event: { preventDefault: () => void; }) => {
+        event.preventDefault();
+        API.loadDag(selectDag).then(x => {
+            console.log('object', x);
+            props.onDataUploaded(x);
+            setShowErrorMessage(false);
+            onClose();
+        }).catch(err => {
+            console.log('errpr', err.message);
+            setShowErrorMessage(true);
+        });
+
     };
 
     const resp = API.getDagList();
@@ -71,19 +86,24 @@ function UploadDownload(props: {
                 <>
                     <h3 className='ModalTitle'>DAG Load</h3>
                     {!openEditor &&
-                        <div className='dagList'>
-                            <label htmlFor="dagList">Choose your Dag:</label>
-                            <select name="dagList" id="dagList" defaultValue="" onChange={loadDag}>
-                                <option disabled value="">Select a Dag</option>
-                                {
-                                    resp?.data?.map((option: { value: string, label: string; }) => (
-                                        <option key={option?.value} value={option?.value}>
-                                            {option?.label}
-                                        </option>
-                                    ))
-                                }
-                            </select>
-                        </div>
+                        <form onSubmit={handleDagSubmit}>
+                            <div className='dagList'>
+                                <label htmlFor="dagList">Choose your Dag:</label>
+                                <select name="dagList" id="dagList" defaultValue="" onChange={loadDag}>
+                                    <option disabled value="">Select a Dag</option>
+                                    {
+                                        resp?.data?.map((option: { value: string, label: string; }) => (
+                                            <option key={option?.value} value={option?.value}>
+                                                {option?.label}
+                                            </option>
+                                        ))
+                                    }
+                                </select>
+                            </div>
+                            {showErrorMessage && <p className='jsonError'>The JSON upload failed. Please check the JSON and try again</p>}
+                            <button type="submit" className='uploadSubmitButton btnSize'>Submit</button>
+                            <button onClick={onClose} className='uploadCancelButton btnSize'>Close</button>
+                        </form>
                     }
                     {openEditor && <form onSubmit={handleSubmit}>
                         {/* <h3 className='ModalTitle'>Paste Your JSON</h3> */}
@@ -101,16 +121,10 @@ function UploadDownload(props: {
                     </form>}
 
                     {!openEditor ?
-                        <>
-                            <p className='sampleText'><span onClick={() => setOpenEditor(true)} className='clickHere'><b>Click here</b> </span>to Enter On Your Own</p>
-
-                            <button onClick={onClose} className='uploadCancelButton btnSize'>Close</button>
-                        </>
+                        <p className='sampleText'><span onClick={() => setOpenEditor(true)} className='clickHere'><b>Click here</b> </span>to Enter On Your Own</p>
                         :
                         <p className='sampleText'><span onClick={() => setOpenEditor(false)} className='clickHere'><b>Click here</b> </span> to Select Dag Templates</p>
                     }
-
-
                 </>
             ) : (
                 <div>
