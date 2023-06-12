@@ -7,6 +7,7 @@ function UploadDownload(props: {
     const { onClose } = props;
     const [data, setData] = useState(JSON.stringify(props.data, null, 2));
     const [copied, setCopied] = useState(false);
+    const [openEditor, setOpenEditor] = useState(false);
     const [dagName, setDagName] = useState('');
     const [errorExist, setErrorExist] = useState(false);
 
@@ -51,24 +52,56 @@ function UploadDownload(props: {
         onClose();
     };
 
+    const loadDag = (e: { target: { value: string; }; }) => {
+        console.log('e', e.target.value);
+        onClose();
+    };
+
 
     return (
         <div className='ModalBox'>
             {props.type === 'upload' ? (
-                <form onSubmit={handleSubmit}>
-                    <h3 className='ModalTitle'>Paste Your JSON</h3>
-                    <textarea
-                        name="data"
-                        value={data}
-                        onChange={handleChange}
-                        className='textAreaSize'
-                        placeholder="Paste Your JSON"
-                        required
-                    />
-                    {errorExist && <p className='jsonError'>The JSON upload failed. Please check the JSON and try again</p>}
-                    <button type="submit" className='uploadSubmitButton btnSize'>Submit</button>
-                    <button onClick={onClose} className='uploadCancelButton btnSize'>Close</button>
-                </form>
+                <>
+                    <h3 className='ModalTitle'>DAG Load</h3>
+                    {!openEditor &&
+                        <div className='dagList'>
+                            <label htmlFor="dagList">Choose your Dag:</label>
+                            <select name="dagList" id="dagList" defaultValue="" onChange={loadDag}>
+                                <option disabled value="">Select a Dag</option>
+                                <option value="volvo">Volvo</option>
+                                <option value="saab">Saab</option>
+                                <option value="mercedes">Mercedes</option>
+                                <option value="audi">Audi</option>
+                            </select>
+                        </div>
+                    }
+                    {openEditor && <form onSubmit={handleSubmit}>
+                        {/* <h3 className='ModalTitle'>Paste Your JSON</h3> */}
+                        <textarea
+                            name="data"
+                            value={data}
+                            onChange={handleChange}
+                            className='textAreaSize'
+                            placeholder="Paste Your JSON"
+                            required
+                        />
+                        {errorExist && <p className='jsonError'>The JSON upload failed. Please check the JSON and try again</p>}
+                        <button type="submit" className='uploadSubmitButton btnSize'>Submit</button>
+                        <button onClick={onClose} className='uploadCancelButton btnSize'>Close</button>
+                    </form>}
+
+                    {!openEditor ?
+                        <>
+                            <p className='sampleText'><span onClick={() => setOpenEditor(true)} className='clickHere'><b>Click here</b> </span>to Enter On Your Own</p>
+
+                            <button onClick={onClose} className='uploadCancelButton btnSize'>Close</button>
+                        </>
+                        :
+                        <p className='sampleText'><span onClick={() => setOpenEditor(false)} className='clickHere'><b>Click here</b> </span> to Select Dag Templates</p>
+                    }
+
+
+                </>
             ) : (
                 <div>
 

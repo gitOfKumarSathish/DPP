@@ -256,6 +256,7 @@ textarea.textAreaSize {
 
 .btnSize {
   width: 25%;
+  margin-bottom: 3%;
 }
 
 p.jsonError {
@@ -308,4 +309,24 @@ button.panelBtn {
   justify-content: space-between;
   align-items: center;
   margin: 0 2%;
+}
+
+.clickHere {
+  color: #0891b2;
+  font-size: 21px;
+  cursor: pointer;
+}
+
+.dagList {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  flex-direction: column;
+}
+
+select#dagList {
+  padding: 2%;
+  width: 60%;
+  border: 1px solid #ccc;
+  margin: 2%;
 }
