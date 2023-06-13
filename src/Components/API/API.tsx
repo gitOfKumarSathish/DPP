@@ -1,4 +1,3 @@
-import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 
 const ApiUrl = {
@@ -8,68 +7,38 @@ const ApiUrl = {
     loadDag: "https://dagger.free.beeceptor.com/",
 };
 
-function GetQueryMethod(url: string, key: string) {
-    return useQuery({
-        queryKey: [key], // unique key
-        queryFn: async () => {
-            const response = await axios.get(url);
-            return response.data;
-        },
-        // staleTime: 10 * 60 * 1000, // 5 minutes // which will memorize the API response for given time
-        keepPreviousData: true,
-        refetchOnWindowFocus: false,
-    });
-}
 
-const GetNormalMethod = async (url: any) => {
-    const response = await fetch(url);
-    const data = await response.json();
-    return data;
+const GetMethod = async (url: any) => {
+    const response = await axios.get(url);
+    return response.data;
 };
 
-async function PostMethod(url: string, data: any, path = '') {
-    const finalUrl = url + path;
-    console.log('finalUrl', finalUrl);
-    const resp = await axios.post(url, data);
-    return resp.data;
+async function PostMethod(url: string, data: any) {
+    const response = await axios.post(url, data);
+    return response.data;
 }
-
-
-
-
-
-
-// export function getFuncNodes() {
-//     let url = ApiUrl.getFuncNodes;
-//     return GetQueryMethod(url, 'funcNodes');
-// }
-
-// export function getDagList() {
-//     let url = ApiUrl.loadDagList;
-//     return GetQueryMethod(url, 'dagList');
-// }
 
 export function getFuncNodes() {
     let url = ApiUrl.getFuncNodes;
-    return GetNormalMethod(url);
+    return GetMethod(url);
 }
 
 export function getDagList() {
     let url = ApiUrl.loadDagList;
-    return GetNormalMethod(url);
+    return GetMethod(url);
 }
 
 
+export const loadDag = async (data: any) => {
+    let url = ApiUrl.loadDag + data;
+    return GetMethod(url);
+};
 
 export const saveDag = async (data: any) => {
     let url = ApiUrl.saveDag;
     return PostMethod(url, data);
 };
 
-export const loadDag = async (data: any) => {
-    let url = ApiUrl.loadDag + data;
-    return GetNormalMethod(url);
-};
 
 
 

@@ -21,27 +21,10 @@ function Load(props: {
     useEffect(() => {
         const fetchData = async () => {
             const resp = await API.getDagList();
-            setDagListResponse(resp.data);
+            setDagListResponse(resp);
         };
         fetchData();
     }, []);
-
-
-
-    // const mutation = useMutation({
-    //     mutationFn: (newTodo: any) => {
-    //         const url = 'https://dagger.free.beeceptor.com/' + newTodo;
-    //         return axios.get(url);
-    //     },
-    //     onSuccess: (data, variables, context) => {
-    //         // I will fire first
-    //         console.log({ data, variables, context });
-    //         console.log('{data}', data.data);
-    //         props.onDataUploaded(data.data);
-    //         onClose();
-    //     },
-    // });
-
 
     const handleDagSubmit = async (event: { preventDefault: () => void; }) => {
         event.preventDefault();
@@ -84,7 +67,6 @@ function Load(props: {
     };
     return (
         <div className='ModalBox'>
-            {console.log('dagListResponse', dagListResponse)}
             <h3 className='ModalTitle'>DAG Load</h3>
             {!openEditor &&
                 <form onSubmit={handleDagSubmit}>

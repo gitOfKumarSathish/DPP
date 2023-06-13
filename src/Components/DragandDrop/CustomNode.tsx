@@ -84,14 +84,13 @@ function Select({ value, handleId, nodeId, sourcePosition, data, selector }: any
   );
 }
 
-function CustomNode({ id, data, type, sourcePosition }: any) {
-
-  const resp = API.getFuncNodes();
+function CustomNode(props: { id: any; data: any; type: any; sourcePosition: any; funcList: any; }) {
+  const { id, data, type, sourcePosition, funcList } = props;
   return (
     <section className={`text-updater-node ${type}`}>
       <h4 className={`nodeTitle ${type}`}>func_node</h4>
       <div className={`flexProps ${type}`}>
-        <Select nodeId={id} value={data.ddType === 'new' ? data.ddType : data.label} handleId={data.label} sourcePosition={sourcePosition} data={data} selector={resp.data} />
+        <Select nodeId={id} value={data.ddType === 'new' ? data.ddType : data.label} handleId={data.label} sourcePosition={sourcePosition} data={data} selector={funcList} />
       </div>
 
     </section>
