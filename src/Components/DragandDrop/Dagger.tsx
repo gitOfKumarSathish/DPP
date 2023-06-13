@@ -272,25 +272,23 @@ export const DnDFlow = () => {
                             <button onClick={uploadHandler} className='panelBtn'>load</button>
                         </Panel>
 
-                        <Panel position="top-left">
+                        {/* <Panel position="top-left">
                             <button onClick={() => onLayout('TB')} className='saveBtn'>vertical layout</button>
                             <button onClick={() => onLayout('LR')}>horizontal layout</button>
-                        </Panel>
+                        </Panel> */}
                     </ReactFlow>
                 </div>
 
             </ReactFlowProvider>
-
-            {(isModal?.open && isModal?.type === 'upload') && (
+            {isModal?.open && (
                 <div className='overlayPosition'>
-                    <Load onClose={closeModal} type={isModal?.type} data={isModal?.data} onDataUploaded={handleUpload} />
+                    {isModal?.type === 'upload' ? (
+                        <Load onClose={closeModal} type={isModal?.type} data={isModal?.data} onDataUploaded={handleUpload} />
+                    ) : (
+                        <Save onClose={closeModal} type={isModal?.type} data={isModal?.data} onDataUploaded={handleUpload} />
+                    )}
                 </div>
             )}
-            {(isModal?.open && isModal?.type !== 'upload') && (
-                <div className='overlayPosition'>
-                    <Save onClose={closeModal} type={isModal?.type} data={isModal?.data} onDataUploaded={handleUpload} />
-                </div>)
-            }
         </div>
 
     );

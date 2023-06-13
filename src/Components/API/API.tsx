@@ -15,7 +15,7 @@ function GetQueryMethod(url: string, key: string) {
             const response = await axios.get(url);
             return response.data;
         },
-        staleTime: 10 * 60 * 1000, // 5 minutes // which will memorize the API response for given time
+        // staleTime: 10 * 60 * 1000, // 5 minutes // which will memorize the API response for given time
         keepPreviousData: true,
         refetchOnWindowFocus: false,
     });
@@ -39,15 +39,27 @@ async function PostMethod(url: string, data: any, path = '') {
 
 
 
+// export function getFuncNodes() {
+//     let url = ApiUrl.getFuncNodes;
+//     return GetQueryMethod(url, 'funcNodes');
+// }
+
+// export function getDagList() {
+//     let url = ApiUrl.loadDagList;
+//     return GetQueryMethod(url, 'dagList');
+// }
+
 export function getFuncNodes() {
     let url = ApiUrl.getFuncNodes;
-    return GetQueryMethod(url, 'funcNodes');
+    return GetNormalMethod(url);
 }
 
 export function getDagList() {
     let url = ApiUrl.loadDagList;
-    return GetQueryMethod(url, 'dagList');
+    return GetNormalMethod(url);
 }
+
+
 
 export const saveDag = async (data: any) => {
     let url = ApiUrl.saveDag;

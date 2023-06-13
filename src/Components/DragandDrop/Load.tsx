@@ -1,19 +1,31 @@
-import React, { memo, useState } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 import * as API from '../API/API';
 
 function Load(props: {
     onDataUploaded(parsedData: any): unknown; data?: any; type?: any; onClose?: any;
 }) {
+    console.log('props', props);
     const { onClose } = props;
     const [data, setData] = useState(JSON.stringify(props.data, null, 2));
     const [showErrorMessage, setShowErrorMessage] = useState(false);
     const [openEditor, setOpenEditor] = useState(false);
     const [errorExist, setErrorExist] = useState(false);
     const [selectDag, setSelectDag] = useState('');
+    const [dagListResponse, setDagListResponse] = useState([]);
 
     const handleChange = (event: { target: { value: React.SetStateAction<string>; }; }) => {
         setData(event.target.value);
     };
+
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const resp = await API.getDagList();
+            setDagListResponse(resp.data);
+        };
+        fetchData();
+    }, []);
+
 
 
     // const mutation = useMutation({
@@ -63,7 +75,7 @@ function Load(props: {
         onClose();
     };
 
-    const resp = API.getDagList();
+
 
 
     const loadDag = async (e: { target: { value: string; }; }) => {
@@ -72,6 +84,7 @@ function Load(props: {
     };
     return (
         <div className='ModalBox'>
+            {console.log('dagListResponse', dagListResponse)}
             <h3 className='ModalTitle'>DAG Load</h3>
             {!openEditor &&
                 <form onSubmit={handleDagSubmit}>
@@ -80,7 +93,7 @@ function Load(props: {
                         <select name="dagList" id="dagList" defaultValue="" onChange={loadDag}>
                             <option disabled value="">Select a Dag</option>
                             {
-                                resp?.data?.map((option: { value: string, label: string; }) => (
+                                dagListResponse?.map((option: { value: string, label: string; }) => (
                                     <option key={option?.value} value={option?.value}>
                                         {option?.label}
                                     </option>
@@ -89,7 +102,7 @@ function Load(props: {
                         </select>
                     </div>
                     {showErrorMessage && <p className='jsonError'>The JSON upload failed. Please check the JSON and try again</p>}
-                    <button type="submit" className='uploadSubmitButton btnSize'>Submit</button>
+                    <button type="submit" className='uploadSubmitButton btnSize'>Load</button>
                     <button onClick={onClose} className='uploadCancelButton btnSize'>Close</button>
                 </form>
             }
@@ -104,14 +117,14 @@ function Load(props: {
                     required
                 />
                 {errorExist && <p className='jsonError'>The JSON upload failed. Please check the JSON and try again</p>}
-                <button type="submit" className='uploadSubmitButton btnSize'>Submit</button>
+                <button type="submit" className='uploadSubmitButton btnSize'>Load</button>
                 <button onClick={onClose} className='uploadCancelButton btnSize'>Close</button>
             </form>}
 
             {!openEditor ?
-                <p className='sampleText'><span onClick={() => setOpenEditor(true)} className='clickHere'><b>Click here</b> </span>to Enter On Your Own</p>
+                <p className='sampleText'><span onClick={() => setOpenEditor(true)} className='clickHere'><b>Click here</b> </span>to Enter DAG JSON</p>
                 :
-                <p className='sampleText'><span onClick={() => setOpenEditor(false)} className='clickHere'><b>Click here</b> </span> to Select Dag Templates</p>
+                <p className='sampleText'><span onClick={() => setOpenEditor(false)} className='clickHere'><b>Click here</b> </span> to Select a Dag</p>
             }
 
         </div>
