@@ -45,7 +45,7 @@ function Save(props: {
     return (
         <div className='ModalBox'>
             <form onSubmit={submitHandler} className='jsonData'>
-                <h3 className='ModalTitle'>DAG JSON</h3>
+                <h3 className='ModalTitle'>Save DAG</h3>
                 <div className='dagNameSection'>
                     <label htmlFor="text">Name:</label>
                     <input id="text" name="text" className="dagNameBox" placeholder='Name of DAG' required onChange={dagNameHandler} value={dagName} />

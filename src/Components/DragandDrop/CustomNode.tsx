@@ -67,7 +67,6 @@ function Select({ value, handleId, nodeId, sourcePosition, data, selector }: any
       </select>
       {(customValue === 'new') &&
         <>
-          {console.log('valueText', valueText)}
           <input id="text" name="text"
             onChange={labelNameChange}
             className="titleBox"

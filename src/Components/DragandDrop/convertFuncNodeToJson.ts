@@ -1,6 +1,5 @@
 export function convertFuncNodeToJsonNode(jsonData: any) {
     const { func_nodes } = jsonData;
-    // console.log('func_nodes', func_nodes);
     let initialNodes: { id: any; type: string; data: { label: any; }; }[] = [];
     let varNodeCollection: any[] = [];
     let outNodeCollection: ((arg0: string, out: any) => unknown)[] = [];
@@ -24,14 +23,9 @@ export function convertFuncNodeToJsonNode(jsonData: any) {
             varNodeCollection.push(varNode);
             outNodeCollection.push(funcNode.out);
         });
-
-
-        console.log('initialNodes', initialNodes);
-
     });
 
     const varNodes = [...new Set([...new Set(varNodeCollection)].concat([...new Set(outNodeCollection)]))];
-    console.log('varNodes', varNodes);
     varNodes.map((varNode, index) => {
         const varObject = {
             id: varNode,
@@ -54,11 +48,9 @@ export function randomPosition() {
 export function convertFuncNodeToJsonEdge(jsonData: any) {
     const { func_nodes } = jsonData;
     let initialEdges: { id: string; markerEnd: { type: string; }; source: string; sourceHandle: string; target: string; targetHandle: null; }[] = [];
-    // console.log('func_nodes', func_nodes);
     func_nodes.map((funcNode: {
         bind(bind: any): unknown; out: string; name: string;
     }) => {
-        console.log('funcNode', funcNode);
         const edgeObject: any = {
             id: `${funcNode.out + "." + funcNode.name}_edge`,
             markerEnd: { type: 'arrowclosed' },

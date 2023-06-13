@@ -4,7 +4,6 @@ import * as API from '../API/API';
 function Load(props: {
     onDataUploaded(parsedData: any): unknown; data?: any; type?: any; onClose?: any;
 }) {
-    console.log('props', props);
     const { onClose } = props;
     const [data, setData] = useState(JSON.stringify(props.data, null, 2));
     const [showErrorMessage, setShowErrorMessage] = useState(false);
@@ -30,7 +29,6 @@ function Load(props: {
         event.preventDefault();
         // mutation.mutate(selectDag);
         API.loadDag(selectDag).then(x => {
-            console.log('object', x);
             props.onDataUploaded(x);
             setShowErrorMessage(false);
             onClose();
@@ -58,11 +56,7 @@ function Load(props: {
         onClose();
     };
 
-
-
-
     const loadDag = async (e: { target: { value: string; }; }) => {
-        console.log('e', e.target.value);
         setSelectDag(e.target.value);
     };
     return (
