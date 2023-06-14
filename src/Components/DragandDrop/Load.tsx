@@ -33,7 +33,7 @@ function Load(props: {
             setShowErrorMessage(false);
             onClose();
         }).catch(err => {
-            console.log('errpr', err.message);
+            console.log('error', err.message);
             setShowErrorMessage(true);
         });
     };
